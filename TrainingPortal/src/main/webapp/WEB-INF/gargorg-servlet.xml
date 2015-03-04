@@ -1,0 +1,271 @@
+<?xml  version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	       http://www.springframework.org/schema/beans/spring-beans.xsd
+	       http://www.springframework.org/schema/mvc
+		   http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		   http://www.springframework.org/schema/context
+		   http://www.springframework.org/schema/context/spring-context.xsd
+		   http://www.springframework.org/schema/tx 
+		   http://www.springframework.org/schema/tx/spring-tx.xsd
+		   http://www.springframework.org/schema/cache
+		   http://www.springframework.org/schema/cache/spring-cache.xsd
+		   http://www.springframework.org/schema/jdbc 
+           http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+           http://www.springframework.org/schema/aop 
+    	   http://www.springframework.org/schema/aop/spring-aop.xsd">
+		   
+<mvc:annotation-driven validator="validator"></mvc:annotation-driven>
+<context:component-scan base-package="com"></context:component-scan>
+
+<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+<mvc:resources mapping="/resources/**" location="/resources/" />
+
+<bean id="tilesviewResolver" class="org.springframework.web.servlet.view.tiles3.TilesViewResolver"  
+           p:order="0"/>  
+ <bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">  
+      <property name="definitions">  
+           <list>  
+           		<!-- Don't put underscore in template file name otherwise it will not be detected. -->
+                <value>/WEB-INF/tiles-defs/templates.xml</value>  
+                <value>/WEB-INF/tiles-defs/trainingportaltemplates.xml</value>
+           </list>  
+      </property>  
+ </bean>  
+      
+<!--  Set the locale of application - Start -->
+      
+  <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+  <property name="basenames">
+	<list>
+		 <value>resources/properties/messages</value>
+		 <value>resources/properties/Lables</value> 
+		 <value>resources/properties/FormValidationAlert</value>
+		 <value>resources/properties/displayTagLabels</value>
+		 <!-- The below files are functionality specific files (For Online Training Portal) start -->
+		 <value>resources/TrainingPortal_properties/TrainingPortalLables</value> 
+		 <value>resources/TrainingPortal_properties/TrainingPortalFormValidationAlert</value>
+		 <value>resources/TrainingPortal_properties/TrainingPortalDisplayTagLabels</value>
+		 <value>resources/TrainingPortal_properties/TrainingPortalMessages</value>
+		 <!-- The below files are functionality specific files (For Online Training Portal) end -->
+	</list>
+  </property>
+  <property name="cacheSeconds">
+	<value>1</value>
+  </property>
+  <property name="defaultEncoding" value="UTF-8"/>
+</bean>
+
+<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+    <property name="validationMessageSource" ref="messageSource">
+    </property>
+</bean>
+
+<!-- Declare the Resolver -->
+<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
+    <property name="defaultLocale" value="en" />
+</bean>
+
+<bean id="handlerMapping"
+    class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping">
+    <property name="interceptors">
+        <ref bean="localeChangeInterceptor" />
+    </property>
+</bean>
+
+<bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
+
+<!--  Set the locale of application - End -->
+
+	
+	<cache:annotation-driven />
+	<!-- generic cache manager -->
+	<bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+	  <property name="caches">
+	    <set>
+	      <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean" p:name="opgCache"/>
+	    </set>
+	  </property>
+	</bean>
+
+<!-- It pulls values from a properties file into bean definitions. --> 
+<bean id="propertyConfigurer"
+        class="org.jasypt.spring3.properties.EncryptablePropertyPlaceholderConfigurer">
+        <constructor-arg ref="configurationEncryptor" />
+        <property name="locations">
+            <list>
+                <value>/WEB-INF/jdbc.properties</value>
+                <value>/WEB-INF/SpringSecurity.properties</value>
+            </list>
+        </property> 
+</bean>        
+
+<bean id="configurationEncryptor" class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor">
+		<property name="password" value="password" />
+</bean>
+
+
+<!-- Declare the Interceptor -->
+<mvc:interceptors>    
+     <!-- This will not cache anything and every time will request for resources. Now, 
+     if user presses back button after logout, new request will be generated and user not being logged in,
+      will be redirected to login page again. -->
+	<bean id="webContentInterceptor"
+		class="org.springframework.web.servlet.mvc.WebContentInterceptor"
+		p:cacheSeconds="0"
+		p:useExpiresHeader="true" 
+		p:useCacheControlHeader="true" 
+		p:useCacheControlNoStore="true" />
+		
+</mvc:interceptors>
+    
+<!-- The following configuration is for database connection  , Hikari Connection Pool start -->
+ <bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="shutdown">
+    <constructor-arg>
+        <bean class="com.zaxxer.hikari.HikariConfig">
+            <constructor-arg>
+                <props>
+                    <prop key="dataSource.url">${dataSource.url}</prop>
+                    <prop key="dataSource.user">${dataSource.username}</prop>
+                    <prop key="dataSource.password">${dataSource.password}</prop>
+                </props>
+            </constructor-arg>
+            <property name="idleTimeout" value="${hibernate.hikari.idleTimeout}" />
+            <property name="dataSourceClassName" value="${hibernate.dataSourceClassName}" />
+        </bean>
+    </constructor-arg>
+</bean>
+
+
+ <!-- The following configuration is for database connection  , Hikari Connection Pool end -->
+
+<!-- Commons DBCP configuration - start -->
+ <!-- 
+ <bean id="dataSource"
+        class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"
+        p:driverClassName="${jdbc.driverClassName}"
+        p:url="${jdbc.databaseurl}" 
+        p:username="${jdbc.username}"
+        p:password="${jdbc.password}" /> 
+
+ -->         
+<!-- Commons DBCP configuration - end -->
+        
+  <!-- Hibernate SessionFactory -->
+    <bean id="sessionFactory"
+        class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <!-- This approach takes database connection values from hibernate.cfg.xml. -->
+        <!-- <property name="configLocation" value="classpath:hibernate.cfg.xml" />  -->
+        <!-- This approach takes database connection values from datasource , where values are defined in jdbc.properties file -->
+        <property name="dataSource" ref="dataSource" />
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">${jdbc.dialect}</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">false</prop>
+                <prop key="hibernate.generate_statistics">true</prop>
+            </props>
+        </property>
+        <property name="mappingJarLocations">
+            <list>
+                <value>/WEB-INF/lib/gargorg-core*.jar</value>
+                <value>/WEB-INF/lib/OnlineTrainingPortal*.jar</value>
+            </list>
+        </property>
+        <!-- <property name="mappingLocations" value="classpath*:**/*.hbm.xml"></property> -->
+        <!-- Following line commented because above line discover all the hbm.xml files from classpath  -->
+        <!-- <property name="mappingResources" ref="hList" /> -->	
+    </bean>
+    
+    <bean id="hList" class="java.util.ArrayList">
+		<constructor-arg>
+			<list>
+				<value>com/gargorg/Masters/valueObject/CmnLanguageMst.hbm.xml</value>
+				<value>com/gargorg/Masters/valueObject/CmnLookupMst.hbm.xml</value>
+				<value>com/gargorg/Masters/valueObject/CmnLookupDetailsRlt.hbm.xml</value>
+				<value>com/gargorg/Masters/valueObject/OrgElementMst.hbm.xml</value>
+				<value>com/gargorg/Masters/valueObject/OrgElementDetailsRlt.hbm.xml</value>
+				<value>com/gargorg/Masters/valueObject/OrgEmpMst.hbm.xml</value>
+				<value>com/gargorg/Masters/valueObject/OrgRoleElementRlt.hbm.xml</value>
+				<value>com/gargorg/Masters/valueObject/OrgUserImageMst.hbm.xml</value>
+				<value>com/gargorg/Masters/valueObject/OrgUserMst.hbm.xml</value>
+				<value>com/gargorg/Masters/valueObject/OrgUserRoleRlt.hbm.xml</value>
+				<value>com/gargorg/Masters/valueObject/OrgRoleMst.hbm.xml</value>
+				<value>com/gargorg/Masters/valueObject/OrgRoleDetailsRlt.hbm.xml</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	
+	<!-- to tell Spring to use commons-upload library to handle the file upload form. Start-->
+ 	<!-- <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/> -->
+ 	
+ 	<!-- Multipart configuration. Replace Spring MVCs MultipartResolver with HDIVs one to implement OWASP security.
+	If commons fileupload is used for multipart processing:  -->
+ 	<bean id="multipartResolver" class="org.hdiv.web.multipart.HdivCommonsMultipartResolver">
+ 	 	<!-- specify maximum file size in bytes(10240 = 10KB) -->
+    	<!-- <property name="maxUploadSize" value="10240" /> -->
+	</bean>
+ 	<!-- to tell Spring to use commons-upload library to handle the file upload form. End-->
+
+ 	<!--  Initialize database when server is starting , this should be once - start -->
+ 	<!-- 
+ 	<jdbc:initialize-database data-source="dataSource" ignore-failures="DROPS">
+		<jdbc:script location="/resources/data/Framework_Complete_Schema.sql" encoding="UTF-8" />
+	</jdbc:initialize-database>
+	 -->
+	<!--  Initialize database when server is starting , this should be once - End -->
+	
+ 
+ <!--
+  Post-processor to perform exception translation on @Repository classes
+  (from native exceptions such as Hibernate/JPA PersistenceExceptions to
+  Spring's DataAccessException hierarchy).
+    -->
+<bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+    
+	<tx:annotation-driven />
+    <bean id="transactionManager"
+        class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+    
+	<!-- SET default mail properties -->
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="smtp.gmail.com"/>
+        <property name="port" value="25"/>
+        <property name="username" value="piyushpcegarg@gmail.com"/>
+        <property name="password" value=""/>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.transport.protocol">smtp</prop>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.debug">true</prop>
+            </props>
+        </property>
+    </bean>
+    
+    <!--  Configuration for Performance monitoring of application - start -->
+    <!-- Enable AspectJ style of Spring AOP -->
+	 <aop:aspectj-autoproxy />
+	 
+    <bean id="perfMonitor" class="org.springframework.aop.interceptor.PerformanceMonitorInterceptor">
+		<property name="logTargetClassInvocation" value="true"></property>
+	</bean>
+	
+	<aop:config>
+	<aop:pointcut expression="execution(* *..service.*.*(..))" id="allServices"/>
+		<aop:advisor pointcut-ref="allServices" advice-ref="perfMonitor" />
+	</aop:config>
+		
+    <!--  Configuration for Performance monitoring of application - end -->
+    
+</beans>

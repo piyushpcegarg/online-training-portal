@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 25, 2014 11:19:13 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.trainingportal.Transactions.valueObject.OrgTrainingTxn" table="ORG_TRAINING_TXN">
+        <id name="trainingId" type="long">
+            <column name="TRAINING_ID" precision="10" scale="0" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="orgUserMstByCreatedUserId" class="com.gargorg.Masters.valueObject.OrgUserMst" fetch="select">
+            <column name="CREATED_USER_ID" precision="10" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="orgUserMstByUpdatedUserId" class="com.gargorg.Masters.valueObject.OrgUserMst" fetch="select">
+            <column name="UPDATED_USER_ID" precision="10" scale="0" />
+        </many-to-one>
+        <property name="trainingCode" type="long">
+            <column name="TRAINING_CODE" precision="10" scale="0" not-null="true" unique="true" />
+        </property>
+        <property name="trainingName" type="string">
+            <column name="TRAINING_NAME" length="80" not-null="true" unique="true" />
+        </property>
+        <property name="trainingSerialNo" type="long">
+            <column name="TRAINING_SERIAL_NO" precision="10" scale="0" not-null="true" />
+        </property>
+        <property name="courseName" type="string">
+            <column name="COURSE_NAME" length="800" not-null="true" />
+        </property>
+        <property name="departmentProject" type="string">
+            <column name="DEPARTMENT_PROJECT" length="400" />
+        </property>
+        <property name="trainerCode" type="long">
+            <column name="TRAINER_CODE" precision="10" scale="0" not-null="true" />
+        </property>
+        <property name="trainingType" type="long">
+            <column name="TRAINING_TYPE" precision="10" scale="0" not-null="true" />
+        </property>
+        <property name="trainingDate" type="date">
+            <column name="TRAINING_DATE" length="7" not-null="true" />
+        </property>
+        <property name="trainingStartTime" type="time">
+            <column name="TRAINING_START_TIME" not-null="true" />
+        </property>
+        <property name="trainingEndTime" type="time">
+            <column name="TRAINING_END_TIME" not-null="true" />
+        </property>
+        <property name="locationCode" type="long">
+            <column name="LOCATION_CODE" precision="10" scale="0" not-null="true" />
+        </property>
+        <property name="attendanceStatus" type="long">
+            <column name="ATTENDANCE_STATUS" precision="10" scale="0" not-null="true" />
+        </property>
+        <property name="activateFlag" type="boolean">
+			<column name="ACTIVATE_FLAG" precision="1" scale="0" not-null="true" />
+		</property>
+        <property name="createdDate" type="timestamp">
+            <column name="CREATED_DATE" length="7" not-null="true" />
+        </property>
+        <property name="updatedDate" type="timestamp">
+            <column name="UPDATED_DATE" length="7" />
+        </property>
+    </class>
+</hibernate-mapping>

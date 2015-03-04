@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+ <!DOCTYPE tiles-definitions PUBLIC  
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">  
+<tiles-definitions>
+
+    <definition name="baseLayout"
+        template="/WEB-INF/jsp/Layout/baseLayout.jsp">
+        <put-attribute name="title" value="" />
+        <put-attribute name="header" value="/WEB-INF/jsp/Layout/header.jsp" />
+        <put-attribute name="body" value="" />
+        <put-attribute name="footer" value="/WEB-INF/jsp/Layout/footer.jsp" />
+        <!-- Default Stylesheet File -->
+        <put-list-attribute name="cssList" cascade="true">
+           <add-attribute value="/resources/css/style.css" />
+           <add-attribute value="/resources/css/jquery-ui.css" />
+           <add-attribute value="/resources/css/jquery.ui.theme.css" />
+           <add-attribute value="/resources/css/jquery.timepicker.css" />
+        </put-list-attribute>    
+         <!-- Default Javascript File -->
+        <put-list-attribute name="jsList" cascade="true">
+           <add-attribute value="/resources/js/common/jquery-2.1.0.js" />
+           <add-attribute value="/resources/js/common/jquery.validate.js" />
+           <add-attribute value="/resources/js/common/jquery-ui.js" />
+           <add-attribute value="/resources/js/common/jquery-idleTimeout.js" />
+           <add-attribute value="/resources/js/common/jquery.i18n.properties-1.0.9.js" />
+           <add-attribute value="/resources/js/common/jquery.sooperfish.js" />
+           <add-attribute value="/resources/js/common/pramukhime.js" />
+           <add-attribute value="/resources/js/common/pramukhindic.js" />
+           <add-attribute value="/resources/js/common/commonFunctions.js" />
+           <add-attribute value="/resources/js/common/additional-methods.js" />
+           <add-attribute value="/resources/js/common/jquery.bpopup.min.js" />
+           <add-attribute value="/resources/js/common/jquery.autocomplete.min.js" />
+           <add-attribute value="/resources/js/common/jquery.timepicker.js" />
+        </put-list-attribute>  
+    </definition>
+
+ 	<definition name="home" extends="baseLayout">
+        <put-attribute name="title" value="Home Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/Admin/home.jsp" />
+    </definition>
+    
+    <definition name="login" extends="baseLayout">
+    	<put-attribute name="title" value="Login Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/Admin/login.jsp" />
+        <!-- Javascript File for login.jsp -->
+        <put-list-attribute name="pageSpecificJsList" cascade="true">
+           <add-attribute value="/resources/js/Admin/login.js" />
+        </put-list-attribute>
+	</definition>
+	
+	 <definition name="changePassword" extends="baseLayout">
+    	<put-attribute name="title" value="Change Password Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/Admin/changePassword.jsp" />
+        <!-- Javascript File for changePassword.jsp -->
+        <put-list-attribute name="pageSpecificJsList" cascade="true">
+           <add-attribute value="/resources/js/Admin/changePassword.js" />
+        </put-list-attribute>
+	</definition>
+	
+	<definition name="forgotPassword" extends="baseLayout">
+    	<put-attribute name="title" value="Forgot Password Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/Admin/forgotPassword.jsp" />
+        <!-- Javascript File for forgotPassword.jsp -->
+        <put-list-attribute name="pageSpecificJsList" cascade="true">
+           <add-attribute value="/resources/js/Admin/forgotPassword.js" />
+        </put-list-attribute>
+	</definition>
+    
+    <definition name="error" extends="baseLayout">
+        <put-attribute name="title" value="Error Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/Layout/error.jsp" />
+    </definition>
+    
+    <definition name="accessDenied" extends="baseLayout">
+        <put-attribute name="title" value="Access Denied Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/Layout/accessDenied.jsp" />
+    </definition>
+    
+     <definition name="clearCache" extends="baseLayout">
+        <put-attribute name="title" value="Clear Cache Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/Admin/clearCache.jsp" />
+        <!-- Javascript File for clearCache.jsp -->
+        <put-list-attribute name="pageSpecificJsList" cascade="true">
+           <add-attribute value="/resources/js/Admin/clearCache.js" />
+        </put-list-attribute>
+     </definition>
+    
+    <definition name="resetPassword" extends="baseLayout">
+    	<put-attribute name="title" value="Reset Password Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/Admin/resetPassword.jsp" />
+        <!-- Javascript File for resetPassword.jsp -->
+        <put-list-attribute name="pageSpecificJsList" cascade="true">
+           <add-attribute value="/resources/js/Admin/resetPassword.js" />
+        </put-list-attribute>
+	</definition>
+	
+	<definition name="securitySetting" extends="baseLayout">
+    	<put-attribute name="title" value="Security Setting Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/Admin/securitySetting.jsp" />
+        <!-- Javascript File for securitySetting.jsp -->
+        <put-list-attribute name="pageSpecificJsList" cascade="true">
+           <add-attribute value="/resources/js/Admin/securitySetting.js" />
+        </put-list-attribute>
+	</definition>
+    
+    <definition name="displayrole" extends="baseLayout">
+        <put-attribute name="title" value="Role Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/Masters/displayrole.jsp" />
+       <!-- Javascript File for displayrole.jsp  -->
+       <put-list-attribute name="pageSpecificJsList" cascade="true">
+          <add-attribute value="/resources/js/Masters/displayrole.js" />
+       </put-list-attribute>  
+    </definition>
+    
+    <definition name="role" extends="baseLayout">
+        <put-attribute name="title" value="Role Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/Masters/role.jsp" />
+       <!-- Javascript File for role.jsp  -->
+       <put-list-attribute name="pageSpecificJsList" cascade="true">
+          <add-attribute value="/resources/js/Masters/role.js" />
+       </put-list-attribute>  
+    </definition>
+    
+    <definition name="displayuser" extends="baseLayout">
+        <put-attribute name="title" value="Display User Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/Masters/displayuser.jsp" />
+       <!-- Javascript File for displayuser.jsp  -->
+       <put-list-attribute name="pageSpecificJsList" cascade="true">
+          <add-attribute value="/resources/js/Masters/displayuser.js" />
+       </put-list-attribute>  
+    </definition>
+    
+    <definition name="user" extends="baseLayout">
+        <put-attribute name="title" value="User Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/Masters/user.jsp" />
+       <!-- Javascript File for user.jsp  -->
+       <put-list-attribute name="pageSpecificJsList" cascade="true">
+          <add-attribute value="/resources/js/Masters/user.js" />
+       </put-list-attribute>  
+    </definition>
+    
+    <definition name="myProfile" extends="baseLayout">
+        <put-attribute name="title" value="My Profile Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/Admin/myProfile.jsp" />
+       <!-- Javascript File for myProfile.jsp  -->
+       <put-list-attribute name="pageSpecificJsList" cascade="true">
+          <add-attribute value="/resources/js/Admin/myProfile.js" />
+       </put-list-attribute>  
+    </definition>
+    
+    <definition name="displayelement" extends="baseLayout">
+        <put-attribute name="title" value="Display Element Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/Masters/displayelement.jsp" />
+       <!-- Javascript File for displayelement.jsp  -->
+       <put-list-attribute name="pageSpecificJsList" cascade="true">
+          <add-attribute value="/resources/js/Masters/displayelement.js" />
+       </put-list-attribute>  
+    </definition>
+    
+    <definition name="element" extends="baseLayout">
+        <put-attribute name="title" value="Element Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/Masters/element.jsp" />
+       <!-- Javascript File for element.jsp  -->
+       <put-list-attribute name="pageSpecificJsList" cascade="true">
+          <add-attribute value="/resources/js/Masters/element.js" />
+       </put-list-attribute>  
+    </definition>
+    
+    <definition name="displayRoleElement" extends="baseLayout">
+        <put-attribute name="title" value="Display Role Element Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/Masters/displayRoleElement.jsp" />
+       <!-- Javascript File for displayRoleElement.jsp  -->
+       <put-list-attribute name="pageSpecificJsList" cascade="true">
+          <add-attribute value="/resources/js/Masters/displayRoleElement.js" />
+       </put-list-attribute>  
+    </definition>
+    
+    <definition name="roleElement" extends="baseLayout">
+        <put-attribute name="title" value="Role Element Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/Masters/RoleElement.jsp" />
+       <!-- Javascript File for RoleElement.jsp  -->
+       <put-list-attribute name="pageSpecificJsList" cascade="true">
+          <add-attribute value="/resources/js/Masters/RoleElement.js" />
+       </put-list-attribute>  
+    </definition>
+    
+    <definition name="displayUserRole" extends="baseLayout">
+        <put-attribute name="title" value="Display User Role Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/Masters/displayUserRole.jsp" />
+       <!-- Javascript File for displayUserRole.jsp  -->
+       <put-list-attribute name="pageSpecificJsList" cascade="true">
+          <add-attribute value="/resources/js/Masters/displayUserRole.js" />
+       </put-list-attribute>  
+    </definition>
+    
+    <definition name="userRole" extends="baseLayout">
+        <put-attribute name="title" value="User Role Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/Masters/UserRole.jsp" />
+       <!-- Javascript File for UserRole.jsp  -->
+       <put-list-attribute name="pageSpecificJsList" cascade="true">
+          <add-attribute value="/resources/js/Masters/UserRole.js" />
+       </put-list-attribute>  
+    </definition>
+    
+</tiles-definitions>

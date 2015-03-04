@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+ <!DOCTYPE tiles-definitions PUBLIC  
+        "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"  
+        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">  
+<tiles-definitions>
+
+	<definition name="displayskill" extends="baseLayout">
+        <put-attribute name="title" value="Display Skill Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/TrainingPortal/Masters/displayskill.jsp" />
+       <!-- Javascript File for displayskill.jsp  -->
+       <put-list-attribute name="pageSpecificJsList" cascade="true">
+          <add-attribute value="/resources/js/TrainingPortal/Masters/displayskill.js" />
+       </put-list-attribute>  
+    </definition>
+
+    <definition name="skill" extends="baseLayout">
+    	<put-attribute name="title" value="Skill Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/TrainingPortal/Masters/skill.jsp" />
+        <!-- Javascript File for skill.jsp -->
+        <put-list-attribute name="pageSpecificJsList" cascade="true">
+           <add-attribute value="/resources/js/TrainingPortal/Masters/skill.js" />
+        </put-list-attribute>
+	</definition>
+	
+	<definition name="displaylocation" extends="baseLayout">
+        <put-attribute name="title" value="Display Location Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/TrainingPortal/Masters/displaylocation.jsp" />
+       <!-- Javascript File for displaylocation.jsp  -->
+       <put-list-attribute name="pageSpecificJsList" cascade="true">
+          <add-attribute value="/resources/js/TrainingPortal/Masters/displaylocation.js" />
+       </put-list-attribute>  
+    </definition>
+	
+	<definition name="location" extends="baseLayout">
+    	<put-attribute name="title" value="Location Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/TrainingPortal/Masters/location.jsp" />
+        <!-- Javascript File for location.jsp -->
+        <put-list-attribute name="pageSpecificJsList" cascade="true">
+           <add-attribute value="/resources/js/TrainingPortal/Masters/location.js" />
+        </put-list-attribute>
+	</definition>
+	
+	<definition name="displaytrainer" extends="baseLayout">
+        <put-attribute name="title" value="Display Trainer Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/TrainingPortal/Masters/displaytrainer.jsp" />
+       <!-- Javascript File for displaytrainer.jsp  -->
+       <put-list-attribute name="pageSpecificJsList" cascade="true">
+          <add-attribute value="/resources/js/TrainingPortal/Masters/displaytrainer.js" />
+       </put-list-attribute>  
+    </definition>
+    
+    <definition name="trainer" extends="baseLayout">
+    	<put-attribute name="title" value="Trainer Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/TrainingPortal/Masters/trainer.jsp" />
+        <!-- Javascript File for trainer.jsp -->
+        <put-list-attribute name="pageSpecificJsList" cascade="true">
+           <add-attribute value="/resources/js/TrainingPortal/Masters/trainer.js" />
+        </put-list-attribute>
+	</definition>
+	
+	<definition name="displayTrainerSkill" extends="baseLayout">
+        <put-attribute name="title" value="Display Trainer Skill Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/TrainingPortal/Masters/displayTrainerSkill.jsp" />
+       <!-- Javascript File for displayTrainerSkill.jsp  -->
+       <put-list-attribute name="pageSpecificJsList" cascade="true">
+          <add-attribute value="/resources/js/TrainingPortal/Masters/displayTrainerSkill.js" />
+       </put-list-attribute>  
+    </definition>
+    
+    <definition name="trainerSkill" extends="baseLayout">
+    	<put-attribute name="title" value="Trainer Skill Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/TrainingPortal/Masters/TrainerSkill.jsp" />
+        <!-- Javascript File for trainer.jsp -->
+        <put-list-attribute name="pageSpecificJsList" cascade="true">
+           <add-attribute value="/resources/js/TrainingPortal/Masters/TrainerSkill.js" />
+        </put-list-attribute>
+	</definition>
+	
+	<definition name="displaytraining" extends="baseLayout">
+        <put-attribute name="title" value="Display Training Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/TrainingPortal/Transactions/displaytraining.jsp" />
+       <!-- Javascript File for displaytraining.jsp  -->
+       <put-list-attribute name="pageSpecificJsList" cascade="true">
+          <add-attribute value="/resources/js/TrainingPortal/Transactions/displaytraining.js" />
+       </put-list-attribute>  
+    </definition>
+    
+    <definition name="training" extends="baseLayout">
+    	<put-attribute name="title" value="Training Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/TrainingPortal/Transactions/training.jsp" />
+        <!-- Javascript File for training.jsp -->
+        <put-list-attribute name="pageSpecificJsList" cascade="true">
+           <add-attribute value="/resources/js/TrainingPortal/Transactions/training.js" />
+        </put-list-attribute>
+	</definition>
+	
+	<definition name="displaytrainingAttendance" extends="baseLayout">
+        <put-attribute name="title" value="Display Training Attendance Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/TrainingPortal/Transactions/displaytrainingAttendance.jsp" />
+       <!-- Javascript File for displaytrainingAttendance.jsp  -->
+       <put-list-attribute name="pageSpecificJsList" cascade="true">
+          <add-attribute value="/resources/js/TrainingPortal/Transactions/displaytrainingAttendance.js" />
+       </put-list-attribute>  
+    </definition>
+    
+    <definition name="trainingAttendance" extends="baseLayout">
+    	<put-attribute name="title" value="Training Attendance Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/TrainingPortal/Transactions/trainingAttendance.jsp" />
+        <!-- Javascript File for trainingAttendance.jsp -->
+        <put-list-attribute name="pageSpecificJsList" cascade="true">
+           <add-attribute value="/resources/js/TrainingPortal/Transactions/trainingAttendance.js" />
+        </put-list-attribute>
+	</definition>
+	
+	<definition name="displaytrainingTrainee" extends="baseLayout">
+        <put-attribute name="title" value="Display Training Trainee Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/TrainingPortal/Transactions/displaytrainingTrainee.jsp" />
+       <!-- Javascript File for displaytrainingTrainee.jsp  -->
+       <put-list-attribute name="pageSpecificJsList" cascade="true">
+          <add-attribute value="/resources/js/TrainingPortal/Transactions/displaytrainingTrainee.js" />
+       </put-list-attribute>  
+    </definition>
+    
+    <definition name="trainingTrainee" extends="baseLayout">
+    	<put-attribute name="title" value="Training Trainee Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/TrainingPortal/Transactions/trainingTrainee.jsp" />
+        <!-- Javascript File for trainingTrainee.jsp -->
+        <put-list-attribute name="pageSpecificJsList" cascade="true">
+           <add-attribute value="/resources/js/TrainingPortal/Transactions/trainingTrainee.js" />
+        </put-list-attribute>
+	</definition>
+	
+	<definition name="deleteTrainee" extends="baseLayout">
+    	<put-attribute name="title" value="Delete Trainee Page" />
+        <put-attribute name="body" value="/WEB-INF/jsp/TrainingPortal/Transactions/deleteTrainee.jsp" />
+        <!-- Javascript File for deleteTrainee.jsp -->
+        <put-list-attribute name="pageSpecificJsList" cascade="true">
+           <add-attribute value="/resources/js/TrainingPortal/Transactions/deleteTrainee.js" />
+        </put-list-attribute>
+	</definition>
+    
+</tiles-definitions>

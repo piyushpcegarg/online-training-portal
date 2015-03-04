@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated May 9, 2014 11:23:19 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="com.gargorg.Masters.valueObject.CmnLanguageMst" table="CMN_LANGUAGE_MST">
+		<id name="langId" type="long">
+			<column name="LANG_ID" precision="10" scale="0" />
+			<generator class="increment" />
+		</id>
+		<many-to-one name="orgUserMstByCreatedUserId" class="com.gargorg.Masters.valueObject.OrgUserMst"
+			fetch="select">
+			<column name="CREATED_USER_ID" precision="10" scale="0"
+				not-null="true" />
+		</many-to-one>
+		<many-to-one name="orgUserMstByUpdatedUserId" class="com.gargorg.Masters.valueObject.OrgUserMst"
+			fetch="select">
+			<column name="UPDATED_USER_ID" precision="10" scale="0" />
+		</many-to-one>
+		<property name="langName" type="string">
+			<column name="LANG_NAME" length="160" not-null="true" />
+		</property>
+		<property name="langShortName" type="string">
+			<column name="LANG_SHORT_NAME" length="80" not-null="true"
+				unique="true" />
+		</property>
+		<property name="createdDate" type="timestamp">
+			<column name="CREATED_DATE" length="7" not-null="true" />
+		</property>
+		<property name="updatedDate" type="timestamp">
+			<column name="UPDATED_DATE" length="7" />
+		</property>
+		<property name="activateFlag" type="boolean">
+			<column name="ACTIVATE_FLAG" precision="1" scale="0" not-null="true" />
+		</property>
+		<set name="orgElementDetailsRlts" table="ORG_ELEMENT_DETAILS_RLT"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="LANG_ID" precision="10" scale="0" not-null="true" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgElementDetailsRlt" />
+		</set>
+		<set name="cmnLookupDetailsRlts" table="CMN_LOOKUP_DETAILS_RLT"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="LANG_ID" precision="10" scale="0" not-null="true" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.CmnLookupDetailsRlt" />
+		</set>
+		<set name="orgEmpMsts" table="ORG_EMP_MST" inverse="true" lazy="true"
+			fetch="select">
+			<key>
+				<column name="LANG_ID" precision="10" scale="0" not-null="true" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgEmpMst" />
+		</set>
+		<set name="orgRoleDetailsRlts" table="ORG_ROLE_DETAILS_RLT"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="LANG_ID" precision="10" scale="0" not-null="true" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgRoleDetailsRlt" />
+		</set>
+	</class>
+</hibernate-mapping>

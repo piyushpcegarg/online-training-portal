@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Nov 25, 2014 11:19:13 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="com.trainingportal.Transactions.valueObject.OrgTrainingTraineeMpg" table="ORG_TRAINING_TRAINEE_MPG">
+        <id name="trainingTraineeMpgId" type="long">
+            <column name="TRAINING_TRAINEE_MPG_ID" precision="10" scale="0" />
+            <generator class="increment" />
+        </id>
+        <many-to-one name="orgUserMstByCreatedUserId" class="com.gargorg.Masters.valueObject.OrgUserMst" fetch="select">
+            <column name="CREATED_USER_ID" precision="10" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="orgUserMstByTraineeId" class="com.gargorg.Masters.valueObject.OrgUserMst" fetch="select">
+            <column name="TRAINEE_ID" precision="10" scale="0" not-null="true" />
+        </many-to-one>
+        <many-to-one name="orgUserMstByUpdatedUserId" class="com.gargorg.Masters.valueObject.OrgUserMst" fetch="select">
+            <column name="UPDATED_USER_ID" precision="10" scale="0" />
+        </many-to-one>
+        <property name="trainingCode" type="long">
+            <column name="TRAINING_CODE" precision="10" scale="0" not-null="true" />
+        </property>
+        <property name="activateFlag" type="boolean">
+			<column name="ACTIVATE_FLAG" precision="1" scale="0" not-null="true" />
+		</property>
+        <property name="createdDate" type="timestamp">
+            <column name="CREATED_DATE" length="7" not-null="true" />
+        </property>
+        <property name="updatedDate" type="timestamp">
+            <column name="UPDATED_DATE" length="7" />
+        </property>
+    </class>
+</hibernate-mapping>

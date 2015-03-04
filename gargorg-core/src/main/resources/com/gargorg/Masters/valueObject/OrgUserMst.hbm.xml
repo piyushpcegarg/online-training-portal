@@ -1,0 +1,271 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated May 9, 2014 11:23:19 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="com.gargorg.Masters.valueObject.OrgUserMst" table="ORG_USER_MST">
+		<id name="userId" type="long">
+			<column name="USER_ID" precision="10" scale="0" />
+			<generator class="increment" />
+		</id>
+		<many-to-one name="orgUserMstByCreatedUserId" class="com.gargorg.Masters.valueObject.OrgUserMst"
+			fetch="select">
+			<column name="CREATED_USER_ID" precision="10" scale="0"
+				not-null="true" />
+		</many-to-one>
+		<many-to-one name="orgUserMstByUpdatedUserId" class="com.gargorg.Masters.valueObject.OrgUserMst"
+			fetch="select">
+			<column name="UPDATED_USER_ID" precision="10" scale="0" />
+		</many-to-one>
+		<property name="userName" type="string">
+			<column name="USER_NAME" length="120" not-null="true" unique="true" />
+		</property>
+		<property name="password" type="string">
+			<column name="PASSWORD" length="512" not-null="true" />
+		</property>
+		<property name="activateFlag" type="boolean">
+			<column name="ACTIVATE_FLAG" precision="1" scale="0" not-null="true" />
+		</property>
+		<property name="createdDate" type="timestamp">
+			<column name="CREATED_DATE" length="7" not-null="true" />
+		</property>
+		<property name="updatedDate" type="timestamp">
+			<column name="UPDATED_DATE" length="7" />
+		</property>
+		<property name="firstlogin" type="string">
+			<column name="FIRSTLOGIN" length="4" />
+		</property>
+		<property name="pwdchangedDate" type="timestamp">
+			<column name="PWDCHANGED_DATE" length="7" not-null="true" />
+		</property>
+		<property name="secretQueCode" type="long">
+			<column name="SECRET_QUE_CODE" precision="10" scale="0"
+				not-null="true" />
+		</property>
+		<property name="secretAnswer" type="string">
+			<column name="SECRET_ANSWER" length="200" not-null="true" />
+		</property>
+		<property name="invalidLoginCnt" type="long">
+			<column name="INVALID_LOGIN_CNT" precision="10" scale="0"
+				not-null="true" />
+		</property>
+		<property name="unlockTime" type="timestamp">
+			<column name="UNLOCK_TIME" length="7" />
+		</property>
+		<property name="otpEnabled" type="boolean">
+			<column name="OTP_ENABLED" precision="1" scale="0" not-null="true" />
+		</property>
+		<property name="otp" type="java.lang.Long">
+			<column name="OTP" precision="4" scale="0" />
+		</property>
+		<property name="otpValidity" type="timestamp">
+			<column name="OTP_VALIDITY" length="7" />
+		</property>
+		<property name="regMobileNo" type="long">
+			<column name="REG_MOBILE_NO" precision="10" scale="0"
+				not-null="true" unique="true" />
+		</property>
+		<set name="orgUserRoleRltsForUserId" table="ORG_USER_ROLE_RLT"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="USER_ID" precision="10" scale="0" not-null="true" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgUserRoleRlt" />
+		</set>
+		<set name="orgRoleMstsForCreatedUserId" table="ORG_ROLE_MST"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="CREATED_USER_ID" precision="10" scale="0"
+					not-null="true" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgRoleMst" />
+		</set>
+		<set name="orgEmpMstsForCreatedUserId" table="ORG_EMP_MST"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="CREATED_USER_ID" precision="10" scale="0"
+					not-null="true" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgEmpMst" />
+		</set>
+		<set name="cmnLookupMstsForUpdatedUserId" table="CMN_LOOKUP_MST"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="UPDATED_USER_ID" precision="10" scale="0" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.CmnLookupMst" />
+		</set>
+		<set name="orgUserImageMstsForUpdatedUserId" table="ORG_USER_IMAGE_MST"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="UPDATED_USER_ID" precision="10" scale="0" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgUserImageMst" />
+		</set>
+		<set name="orgUserMstsForCreatedUserId" table="ORG_USER_MST"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="CREATED_USER_ID" precision="10" scale="0"
+					not-null="true" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgUserMst" />
+		</set>
+		<set name="cmnLanguageMstsForCreatedUserId" table="CMN_LANGUAGE_MST"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="CREATED_USER_ID" precision="10" scale="0"
+					not-null="true" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.CmnLanguageMst" />
+		</set>
+		<set name="orgUserImageMstsForCreatedUserId" table="ORG_USER_IMAGE_MST"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="CREATED_USER_ID" precision="10" scale="0"
+					not-null="true" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgUserImageMst" />
+		</set>
+		<set name="orgUserMstsForUpdatedUserId" table="ORG_USER_MST"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="UPDATED_USER_ID" precision="10" scale="0" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgUserMst" />
+		</set>
+		<set name="orgUserRoleRltsForUpdatedUserId" table="ORG_USER_ROLE_RLT"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="UPDATED_USER_ID" precision="10" scale="0" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgUserRoleRlt" />
+		</set>
+		<set name="orgRoleElementRltsForCreatedUserId" table="ORG_ROLE_ELEMENT_RLT"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="CREATED_USER_ID" precision="10" scale="0"
+					not-null="true" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgRoleElementRlt" />
+		</set>
+		<set name="orgUserRoleRltsForCreatedUserId" table="ORG_USER_ROLE_RLT"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="CREATED_USER_ID" precision="10" scale="0"
+					not-null="true" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgUserRoleRlt" />
+		</set>
+		<set name="orgEmpMstsForUpdatedUserId" table="ORG_EMP_MST"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="UPDATED_USER_ID" precision="10" scale="0" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgEmpMst" />
+		</set>
+		<set name="orgRoleElementRltsForUpdatedUserId" table="ORG_ROLE_ELEMENT_RLT"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="UPDATED_USER_ID" precision="10" scale="0" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgRoleElementRlt" />
+		</set>
+		<set name="orgElementDetailsRltsForUpdatedUserId" table="ORG_ELEMENT_DETAILS_RLT"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="UPDATED_USER_ID" precision="10" scale="0" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgElementDetailsRlt" />
+		</set>
+		<set name="orgElementDetailsRltsForCreatedUserId" table="ORG_ELEMENT_DETAILS_RLT"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="CREATED_USER_ID" precision="10" scale="0"
+					not-null="true" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgElementDetailsRlt" />
+		</set>
+		<set name="orgUserImageMstsForUserId" table="ORG_USER_IMAGE_MST"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="USER_ID" precision="10" scale="0" not-null="true"
+					unique="true" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgUserImageMst" />
+		</set>
+		<set name="orgElementMstsForCreatedUserId" table="ORG_ELEMENT_MST"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="CREATED_USER_ID" precision="10" scale="0"
+					not-null="true" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgElementMst" />
+		</set>
+		<set name="orgRoleMstsForUpdatedUserId" table="ORG_ROLE_MST"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="UPDATED_USER_ID" precision="10" scale="0" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgRoleMst" />
+		</set>
+		<set name="cmnLookupMstsForCreatedUserId" table="CMN_LOOKUP_MST"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="CREATED_USER_ID" precision="10" scale="0"
+					not-null="true" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.CmnLookupMst" />
+		</set>
+		<set name="cmnLookupDetailsRltsForCreatedUserId" table="CMN_LOOKUP_DETAILS_RLT"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="CREATED_USER_ID" precision="10" scale="0"
+					not-null="true" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.CmnLookupDetailsRlt" />
+		</set>
+		<set name="orgElementMstsForUpdatedUserId" table="ORG_ELEMENT_MST"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="UPDATED_USER_ID" precision="10" scale="0" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgElementMst" />
+		</set>
+		<set name="cmnLookupDetailsRltsForUpdatedUserId" table="CMN_LOOKUP_DETAILS_RLT"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="UPDATED_USER_ID" precision="10" scale="0" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.CmnLookupDetailsRlt" />
+		</set>
+		<set name="orgRoleDetailsRltsForCreatedUserId" table="ORG_ROLE_DETAILS_RLT"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="CREATED_USER_ID" precision="10" scale="0"
+					not-null="true" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgRoleDetailsRlt" />
+		</set>
+		<set name="orgRoleDetailsRltsForUpdatedUserId" table="ORG_ROLE_DETAILS_RLT"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="UPDATED_USER_ID" precision="10" scale="0" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgRoleDetailsRlt" />
+		</set>
+		<set name="orgEmpMstsForUserId" table="ORG_EMP_MST" inverse="true"
+			lazy="true" fetch="select">
+			<key>
+				<column name="USER_ID" precision="10" scale="0" not-null="true" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.OrgEmpMst" />
+		</set>
+		<set name="cmnLanguageMstsForUpdatedUserId" table="CMN_LANGUAGE_MST"
+			inverse="true" lazy="true" fetch="select">
+			<key>
+				<column name="UPDATED_USER_ID" precision="10" scale="0" />
+			</key>
+			<one-to-many class="com.gargorg.Masters.valueObject.CmnLanguageMst" />
+		</set>
+	</class>
+</hibernate-mapping>

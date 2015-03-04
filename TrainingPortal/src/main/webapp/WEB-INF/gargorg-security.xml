@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:sec="http://www.springframework.org/schema/security"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	       http://www.springframework.org/schema/beans/spring-beans.xsd
+		   http://www.springframework.org/schema/security
+		   http://www.springframework.org/schema/security/spring-security.xsd">
+		   
+	<!-- Filter Chain -->
+	<bean id="springSecurityFilterChain" class="org.springframework.security.web.FilterChainProxy">
+	 	<sec:filter-chain-map path-type="ant">
+			<sec:filter-chain pattern="/resources/**" filters="anonymousProcessingFilter" />
+			<sec:filter-chain pattern="/login*/**" filters="anonymousProcessingFilter" />
+			<sec:filter-chain pattern="/changePassword/**" filters="anonymousProcessingFilter" />
+			<sec:filter-chain pattern="/forgotPassword/**" filters="anonymousProcessingFilter" />
+			<sec:filter-chain pattern="/logoutSuccessful" filters="anonymousProcessingFilter" />
+			<sec:filter-chain pattern="/**"	filters=" channelProcessingFilter , securityContextFilter , hdivFilter , concurrentSessionFilter , logoutFilter , authenticationProcessingFilter , requestCacheFilter , 
+			securityContextHolderAwareRequestFilter , sessionManagementFilter , exceptionTranslator , filterSecurityInterceptor" />
+		</sec:filter-chain-map>
+	</bean>
+	
+	<!-- 
+ 	<sec:http use-expressions="true" entry-point-ref="loginEntryPoint" disable-url-rewriting="true" authentication-manager-ref="authenticationManager">
+    	<sec:intercept-url pattern="/login*" access="permitAll" />
+    	<sec:intercept-url pattern="/logout*" access="permitAll"/>
+    	<sec:intercept-url pattern="/**" access="hasRole('ROLE_USER')" requires-channel="https" /> 
+		<sec:custom-filter ref="authenticationProcessingFilter" position="FORM_LOGIN_FILTER"/>
+		<sec:access-denied-handler error-page="/accessDenied"/>
+		<sec:form-login always-use-default-target="false" />
+		<sec:logout logout-success-url="/logout" delete-cookies="JSESSIONID" invalidate-session="true"/>
+		<sec:session-management invalid-session-url="/logout" session-authentication-error-url="/logout">
+           <sec:concurrency-control max-sessions="1"  expired-url="/logout" />
+        </sec:session-management>
+	</sec:http>
+	 -->
+	
+	<bean id="anonymousProcessingFilter" class="org.springframework.security.web.authentication.AnonymousAuthenticationFilter">
+		<property name="key" value="myapp" />
+		<property name="userAttribute" value="anonymousUser,ROLE_ANONYMOUS" />
+	</bean>
+	
+	<bean id="channelProcessingFilter" class="org.springframework.security.web.access.channel.ChannelProcessingFilter">
+  		<property name="channelDecisionManager" ref="channelDecisionManager"/>
+  		<property name="securityMetadataSource">
+    		<sec:filter-security-metadata-source path-type="ant">
+      			<sec:intercept-url pattern="/**" access="REQUIRES_SECURE_CHANNEL" />
+    		</sec:filter-security-metadata-source>
+  		</property>
+	</bean>
+
+	<bean id="channelDecisionManager" class="org.springframework.security.web.access.channel.ChannelDecisionManagerImpl">
+  		<property name="channelProcessors">
+    		<list>
+    			<ref bean="secureChannelProcessor"/>
+    			<ref bean="insecureChannelProcessor"/>
+    		</list>
+  		</property>
+	</bean>
+
+	<bean id="secureChannelProcessor" class="org.springframework.security.web.access.channel.SecureChannelProcessor" p:entryPoint-ref="retryWithHttpsEntryPoint" />
+	<bean id="insecureChannelProcessor" class="org.springframework.security.web.access.channel.InsecureChannelProcessor"  p:entryPoint-ref="retryWithHttpEntryPoint" />
+	
+	<bean id="retryWithHttpEntryPoint" class="org.springframework.security.web.access.channel.RetryWithHttpEntryPoint" p:portMapper-ref="portMapper" />
+	<bean id="retryWithHttpsEntryPoint" class="org.springframework.security.web.access.channel.RetryWithHttpsEntryPoint"  p:portMapper-ref="portMapper" />
+	
+	<bean id="portMapper" class="org.springframework.security.web.PortMapperImpl">
+		<property name="portMappings">
+			<map>
+				<entry key="${httpPort1}"><value>${httpsPort1}</value></entry>
+				<entry key="${httpPort2}"><value>${httpsPort2}</value></entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="securityContextFilter" class="org.springframework.security.web.context.SecurityContextPersistenceFilter">
+   		<property name="securityContextRepository" ref="securityContextRepository"/>
+	</bean>
+	<bean id="securityContextRepository"  class="org.springframework.security.web.context.HttpSessionSecurityContextRepository" >
+		<property name="disableUrlRewriting" value="true"></property>
+	</bean>  
+	
+	<!-- Following filter added for HDIV configuration to implement and protect application from OWASP top 10 security vulnerabilities - start  -->
+	<bean id="hdivFilter" class="org.hdiv.filter.ValidatorFilter" />
+	<!-- Following filter added for HDIV configuration to implement and protect application from OWASP top 10 security vulnerabilities - end  -->
+	
+	<!-- Concurrent Session Handling Start-->
+	<bean id="concurrentSessionFilter" class="org.springframework.security.web.session.ConcurrentSessionFilter">
+		<constructor-arg ref="sessionRegistry"></constructor-arg>
+		<constructor-arg value="/${ExpiredUrl}"></constructor-arg>
+	</bean>
+	<!-- Concurrent Session Handling End-->
+ 	
+
+	<bean id="logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
+		<property name="filterProcessesUrl" value="/${logoutPageUrl}" />
+  		<constructor-arg value="/${logoutSuccessUrl}"/>
+  		<constructor-arg> 
+  			<list>
+       			<bean class="com.gargorg.Admin.service.CustomSecurityContextLogoutHandler"/>
+       		</list>
+  		</constructor-arg>
+	</bean>  
+	
+	<bean id="authenticationProcessingFilter"  class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
+		<property name="sessionAuthenticationStrategy" ref="sessionAuthenticationStrategy" />
+  		<property name="authenticationManager" ref="authenticationManager"/>
+  		<property name="filterProcessesUrl" value="/${authenticationCheck}"/>
+  		<property name="usernameParameter" value="username"/>
+        <property name="passwordParameter" value="password"/>
+  		<property name="authenticationSuccessHandler" ref="authenticationSuccessHandler" />
+  		<property name="authenticationFailureHandler" ref="authenticationFailureHandler" />
+ 	</bean>  
+ 	
+ 	<bean id="authenticationSuccessHandler" class="com.gargorg.Admin.service.CustomAuthenticationSuccessHandler">
+  		<property name="alwaysUseDefaultTargetUrl" value="true"/>
+  		<property name="defaultTargetUrl" value="/${homePageUrl}"/>
+  		<property name="localeResolver" ref="localeResolver" />
+	</bean>
+	
+	<bean id="authenticationFailureHandler" class=" com.gargorg.Admin.service.CustomAuthenticationFailureHandler">
+   		<property name="defaultFailureUrl" value="/${loginfailedPageUrl}/"/>
+   		<property name="exceptionMappings">
+	        <props>
+	            <prop key="org.springframework.security.authentication.LockedException">/${loginfailedPageUrl}/accountLocked</prop>
+	            <prop key="org.springframework.security.authentication.DisabledException">/${loginfailedPageUrl}/accountDisabled</prop>
+	            <prop key="org.springframework.security.authentication.AccountExpiredException">/${loginfailedPageUrl}/accountExpired</prop>
+	            <prop key="org.springframework.security.authentication.BadCredentialsException">/${loginfailedPageUrl}/badCredentials</prop>
+	            <prop key="org.springframework.security.authentication.CredentialsExpiredException">/${changePasswordPageUrl}/credentialExpired</prop>
+	            <prop key="com.gargorg.Admin.Exception.OtpRequiredException">/${loginfailedPageUrl}/otpRequired</prop>
+	            <prop key="com.gargorg.Admin.Exception.InvalidOtpException">/${loginfailedPageUrl}/invalidOtpException</prop>
+	        </props>
+    	</property>
+    	<property name="localeResolver" ref="localeResolver" />
+   	</bean>
+ 	
+ 	<bean id="requestCacheFilter" class="org.springframework.security.web.savedrequest.RequestCacheAwareFilter" >
+ 		<property name="requestCache" ref="requestCache"></property>
+ 	</bean>
+ 	<bean id="securityContextHolderAwareRequestFilter" class="org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter" />
+ 	
+ 	<!-- Added for Session Faxiation start -->
+	<bean id="sessionManagementFilter" class="org.springframework.security.web.session.SessionManagementFilter">
+		<constructor-arg ref="securityContextRepository" />
+		<constructor-arg ref="sessionAuthenticationStrategy" />
+		<property name="invalidSessionStrategy">
+    		<bean class="org.springframework.security.web.session.SimpleRedirectInvalidSessionStrategy">
+       			<constructor-arg name="invalidSessionUrl" value="/login" />
+    		</bean>
+  		</property>
+		<property name="authenticationFailureHandler" ref="authenticationFailureHandler"/>
+   	</bean>
+	<bean id="sessionAuthenticationStrategy" class="org.springframework.security.web.authentication.session.ConcurrentSessionControlStrategy">
+		<constructor-arg ref="sessionRegistry"></constructor-arg>
+		<property name="exceptionIfMaximumExceeded" value="false" />
+		<property name="migrateSessionAttributes" value="false" />
+	</bean>
+	<bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl" />
+	<!-- Added for Session Faxiation End -->
+	
+	<bean id="exceptionTranslator" class="org.springframework.security.web.access.ExceptionTranslationFilter">
+		<constructor-arg ref="loginEntryPoint"></constructor-arg>
+		<constructor-arg ref="requestCache"></constructor-arg>
+		<property name="accessDeniedHandler" ref="accessDeniedHandler" />
+   	</bean>
+   	<bean id ="requestCache" class="org.springframework.security.web.savedrequest.HttpSessionRequestCache"></bean>
+   	<bean id="accessDeniedHandler" class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
+		<property name="errorPage" value="/${accessDenied}" />
+	</bean>
+	
+	<bean id="filterSecurityInterceptor"  class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
+ 	<property name="authenticationManager" ref="authenticationManager" />
+ 	<property name="accessDecisionManager" ref="accessDecisionManager" />
+ 	<property name="securityMetadataSource" ref="jdbcFilterInvocationSecurityMetadataSource"/>
+ 	</bean>
+
+	<bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+    	<property name="decisionVoters">
+     	<list>
+      		<bean class="org.springframework.security.access.vote.RoleVoter" p:rolePrefix="" />
+      		<bean class="org.springframework.security.access.vote.AuthenticatedVoter"/>
+     	</list>
+    	</property>
+   	</bean>  
+   	
+   	<bean id="jdbcFilterInvocationSecurityMetadataSource" class="com.gargorg.Admin.service.JdbcFilterInvocationSecurityMetadataSource"/>
+
+ 	 <bean id="loginEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+           <property name="loginFormUrl" value="/${loginPageUrl}"/>
+           <property name="forceHttps" value="true"/>
+     </bean>
+ 	
+ 	<bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">
+  		<property name="providers">
+    		<list>
+      			<ref bean="anonymousAuthenticationProvider" />
+      			<ref bean="daoAuthenticationProvider"/>
+    		</list>
+  		</property>
+	</bean>
+	
+	<bean id="anonymousAuthenticationProvider" class="org.springframework.security.authentication.AnonymousAuthenticationProvider">
+		<property name="key" value="myapp" />
+	</bean>
+
+	<bean id="daoAuthenticationProvider" class="com.gargorg.Admin.dao.CustomDaoAuthenticationProvider">
+  		<property name="userDetailsService" ref="customUserDetailsService"/>
+  		<property name="passwordEncoder" ref="bCryptPasswordEncoder"></property>
+  		<property name="preAuthenticationChecks" ref="customPreAuthenticationChecks"></property>
+  		<property name="postAuthenticationChecks" ref="customPostAuthenticationChecks"></property>
+	</bean>
+
+	<bean id="customUserDetailsService" class="com.gargorg.Admin.service.UserDetailsServiceImpl">
+	</bean>
+	
+	<!-- For hashing and salting user passwords -->
+    <bean id="bCryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+    
+    <!-- For Custom Pre Authentication Checks -->
+    <bean id="customPreAuthenticationChecks" class="com.gargorg.Admin.service.CustomPreAuthenticationChecks"/>
+    
+    <!-- For Custom Post Authentication Checks -->
+    <bean id="customPostAuthenticationChecks" class="com.gargorg.Admin.service.CustomPostAuthenticationChecks"/>
+    
+    <!-- Below bean is used instead of  use-expressions="true" -->
+    <bean id="webexpressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler" /> 
+    
+    <!--  This will protect all methods on beans declared in the application context whose classes
+     are in the com.gargorg package and whose class names end in "Service". Only users with the
+      ROLE_USER role will be able to invoke these methods. 
+    <sec:global-method-security secured-annotations="enabled" >
+    <protect-pointcut expression="execution(* com.gargorg.Masters.*.*Service.*(..))"
+         access="ROLE_DEVELOPER"/>
+  	</sec:global-method-security> -->
+  	
+</beans>

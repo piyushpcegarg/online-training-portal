@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:hdiv="http://www.hdiv.org/schema/hdiv"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.hdiv.org/schema/hdiv 
+	http://www.hdiv.org/schema/hdiv/hdiv.xsd">
+	
+	<!--  HDIV Configuration - start -->
+    <hdiv:config excludedExtensions="css,png,jpg,js,eot,ttf,properties" errorPage="/errorPage" randomName="true" showErrorPageOnEditableValidation="true" maxPagesPerSession="8">
+		<hdiv:sessionExpired loginPage="/login"></hdiv:sessionExpired>
+    	<hdiv:startPages>/login</hdiv:startPages>
+    	<hdiv:startPages method="post">/authenticationCheck</hdiv:startPages>
+    	<hdiv:startPages method="get">/.*</hdiv:startPages>
+	</hdiv:config>
+	
+	<hdiv:editableValidations registerDefaults="true">
+		<hdiv:validationRule url="/.*" enableDefaults="true"></hdiv:validationRule>
+	</hdiv:editableValidations>
+	
+	<!--  HDIV Configuration - end -->
+	
+</beans>
