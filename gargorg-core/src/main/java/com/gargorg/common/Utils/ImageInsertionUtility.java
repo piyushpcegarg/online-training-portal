@@ -23,15 +23,15 @@ public class ImageInsertionUtility {
   public static void main(String[] args) throws Exception, IOException, SQLException {
 	  
 	// For MySQL database
-	  
+	/*  
     Class.forName("com.mysql.jdbc.Driver");
     Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/tportal", "root", "password");
-    
+    */
     // For Oracle database
-    /*
+    
     Class.forName("oracle.jdbc.driver.OracleDriver");
     Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "tportal", "tportal");
-    */
+    
     
     
     String INSERT_PICTURE = "insert into org_user_image_mst(USER_IMAGE_ID,USER_ID,IMAGE,ACTIVATE_FLAG,CREATED_USER_ID,CREATED_DATE) values(?,?,?,?,?,?)";
@@ -46,12 +46,13 @@ public class ImageInsertionUtility {
       String path = currDir.getAbsolutePath();
       path = path.substring(0, path.length()-1);
       // Get current directory of project - End
+      path = path.replace("gargorg-core", "TrainingPortal");
       System.out.println(path);
       System.out.println("Convert above path by replacing single backward slash by double backward slash");
       System.out.println("Enter Modified Path:\n");
       sc = new Scanner(System.in);
       String modifiedPath = sc.nextLine();
-      File file = new File(modifiedPath+"web\\resources\\images\\user_image.jpg");
+      File file = new File(modifiedPath+"src\\main\\webapp\\resources\\images\\user_image.jpg");
       fis = new FileInputStream(file);
       ps = conn.prepareStatement(INSERT_PICTURE);
       ps.setLong(1, 1L);

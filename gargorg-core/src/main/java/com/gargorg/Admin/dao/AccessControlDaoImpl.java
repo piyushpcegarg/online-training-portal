@@ -3,6 +3,7 @@
  */
 package com.gargorg.Admin.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -41,9 +42,9 @@ public class AccessControlDaoImpl implements AccessControlDao
 	
 	@Override
 	@Cacheable("opgCache")
-	public String[] getAllowedRoles(String requestUrl) throws Exception
+	public List<String> getAllowedRoles(String requestUrl) throws Exception
 	{
-		String[] allowedRoles = null;
+		List<String> allowedRoles = new ArrayList<String>();
 		try
 		{
 			//Check whether requestUrl belongs to common elements -> Start
@@ -88,19 +89,14 @@ public class AccessControlDaoImpl implements AccessControlDao
 			{
 				hqlQuery.setString("requestUrl", requestUrl+"%");
 			}
-			List<Object> resultList = hqlQuery.list();
+			List<String> resultList = hqlQuery.list();
 			if(resultList != null && !resultList.isEmpty())
 			{
-				int resultListSize = resultList.size();
-				allowedRoles = new String[resultListSize];
-				for(int loopCount = 0; loopCount < resultListSize ; loopCount++)
-				{
-					allowedRoles[loopCount] = (String)resultList.get(loopCount);
-				}
+				allowedRoles = resultList;
 			}
 			else
 			{
-				allowedRoles = new String[]{"NO_ROLE_SPECIFIED"};			// If no role is tagged with element then compare logged in user role with "NO_ROLE_SPECIFIED"
+				allowedRoles.add("NO_ROLE_SPECIFIED");			// If no role is tagged with element then compare logged in user role with "NO_ROLE_SPECIFIED"
 			}
 		}
 		catch(Exception e)

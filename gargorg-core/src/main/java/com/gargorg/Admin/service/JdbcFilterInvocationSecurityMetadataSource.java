@@ -1,11 +1,15 @@
 package com.gargorg.Admin.service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
@@ -17,13 +21,15 @@ public class JdbcFilterInvocationSecurityMetadataSource implements FilterInvocat
 	
 	@Autowired
 	private AccessControlDao accessControlDao;
+	@Value("${anonymousAccessElements}")
+	private String anonymousAccessElements;
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(JdbcFilterInvocationSecurityMetadataSource.class);
 	
     @Override
 	public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
     	
-    	String[] roles = new String[0];
+    	List<String> roles = new ArrayList<String>();
     	try
     	{
 	        FilterInvocation fi = (FilterInvocation) object;
@@ -46,25 +52,43 @@ public class JdbcFilterInvocationSecurityMetadataSource implements FilterInvocat
 			{
 				requestUrl = url;
 			}
-			if(!requestUrl.equals("/"))
+			// Skip all the requests which are configured for anonymous user - start
+			boolean isAnonymousRequest = false;
+			String[] anonymousAccessElementsArray = anonymousAccessElements.split(",");
+			List<String> anonymousAccessElementsList = Arrays.asList(anonymousAccessElementsArray);
+			if(anonymousAccessElementsList.contains(requestUrl)) {
+				isAnonymousRequest = true;
+				roles.add("ROLE_ANONYMOUS");
+			}
+			// Skip all the requests which are configured for anonymous user - end
+			if((!requestUrl.equals("/") && !isAnonymousRequest) || requestUrl.equals("/errorPage"))
 			{
-				roles = accessControlDao.getAllowedRoles(requestUrl);
+				 
+				roles.addAll(accessControlDao.getAllowedRoles(requestUrl));
 			}
     	}
     	catch (Exception e) 
 		{
 			LOGGER.error("Error description", e);
 		}
-    	return SecurityConfig.createList(roles);
+    	return convertList(roles);
     }
 
     @Override
 	public Collection<ConfigAttribute> getAllConfigAttributes() {
-        return null;
+    	return null;
     }
 
     @Override
 	public boolean supports(Class<?> clazz) {
         return FilterInvocation.class.isAssignableFrom(clazz);
+    }
+    
+    private List<ConfigAttribute> convertList(List<String> roles) {
+    	List<ConfigAttribute> rolesList = new ArrayList<ConfigAttribute>(roles.size());
+    	for(String role : roles) {
+    		rolesList.add(new SecurityConfig(role.trim()));
+    	}
+    	return rolesList;
     }
 }

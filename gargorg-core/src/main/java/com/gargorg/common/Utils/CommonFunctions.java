@@ -6,11 +6,12 @@ package com.gargorg.common.Utils;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.jasypt.encryption.StringEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import com.gargorg.common.constant.CommonConstants;
@@ -19,9 +20,15 @@ import com.gargorg.common.constant.CommonConstants;
  * @author piyush
  *	This class contains all the functions which are used through out the project. 
  */
+@Component("commonFunctions")
 public class CommonFunctions 
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CommonFunctions.class);
+	
+	@Autowired
+	private static PasswordEncoder passwordEncoder;
+	@Autowired
+	private static StringEncryptor stringEncryptor;
 	
 	public static Date addMinutesInDate(Date date , int minutes)
 	{
@@ -70,46 +77,20 @@ public class CommonFunctions
 	  return daysBetween;  
 	}
 	
-	public static String getStandardPBEEncryptedString(String password,
-			String algorithm, String clearTextString) {
-		if (password == null) {
-			password = "password";
-		}
-		if (algorithm == null) {
-			algorithm = "PBEWithMD5AndDES";
-		}
-
-		StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
-		encryptor.setPassword(password);
-		encryptor.setAlgorithm(algorithm);
-
-		return encryptor.encrypt(clearTextString);
+	public static String getStandardPBEEncryptedString(String clearTextString) {
+		return stringEncryptor.encrypt(clearTextString);
 	}
     
-    public static String getStandardPBEDecryptedString(String password,
-			String algorithm, String encryptedString) {
-		if (password == null) {
-			password = "password";
-		}
-		if (algorithm == null) {
-			algorithm = "PBEWithMD5AndDES";
-		}
-
-		StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
-		encryptor.setPassword(password);
-		encryptor.setAlgorithm(algorithm);
-
-		return encryptor.decrypt(encryptedString);
+    public static String getStandardPBEDecryptedString(String encryptedString) {
+		return stringEncryptor.decrypt(encryptedString);
 	}
     
     public static String getEncodedPassword(String password) {
-    	PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		String hashedPassword = passwordEncoder.encode(password);
 		return hashedPassword;
 	}
     
     public static boolean compareEncodedPassword(String rawPassword ,  String encodedPassword) {
-    	PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     	return passwordEncoder.matches(rawPassword, encodedPassword);
 	}
     

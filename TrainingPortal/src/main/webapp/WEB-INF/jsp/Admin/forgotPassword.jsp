@@ -65,7 +65,7 @@
             <p style="padding-top: 15px"><span>&nbsp;</span>
 				<input class="submit" type="button" id="forgotPassword" name="forgotPassword" style="width: 170px;" value="<spring:message code="save" />" />
             	<input class="submit" type="reset" name="reset" id="reset" value="<spring:message code="reset" />" onclick="resetForm(forgotPasswordForm)" />
-            	<input class="submit" type="button" name="close" id="close" value="<spring:message code="close" />" onclick="goToHomePage()" />
+            	<input class="submit" type="button" name="close" id="close" value="<spring:message code="close" />" onclick="goToLoginPage()" />
             </p>
      	</fieldset>
      </form:form>

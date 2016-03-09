@@ -29,6 +29,10 @@ function goToHomePage() {
 	window.location.href = contextPathJs + "/home";
 }
 
+function goToLoginPage() {
+	window.location.href = contextPathJs + "/login";
+}
+
 loadInternationalization = function(localeFromSession) {
 	jQuery.i18n.properties({
 		name : [ 'JsAlertMsgs', 'TrainingPortalJsAlertMsgs' ],

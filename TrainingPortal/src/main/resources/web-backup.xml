@@ -15,7 +15,19 @@
         	/WEB-INF/hdiv-config.xml
         </param-value>
   </context-param>
+  <!-- Log4jConfigListener listener should be registered before ContextLoaderListener in web.xml when using custom log4j initialization. -->
+  <!-- Configure log4j.properties file to generate log file - start -->
   
+  <context-param>
+  	<param-name>log4jConfigLocation</param-name>
+  	<param-value>/WEB-INF/log4j.properties</param-value>
+  </context-param>
+  <listener>
+  	<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+  </listener>
+  
+   <!-- Configure log4j.properties file to generate log file - Over -->
+   
   <listener>
     <listener-class>
             org.springframework.web.context.ContextLoaderListener
@@ -127,18 +139,6 @@
   </error-page>
   <!-- Common error page for all type of errors - end -->
   
-  <!-- Configure log4j.properties file to generate log file - start -->
-  
-  <context-param>
-  	<param-name>log4jConfigLocation</param-name>
-  	<param-value>/WEB-INF/log4j.properties</param-value>
-  </context-param>
-  <listener>
-  	<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
-  </listener>
-  
-   <!-- Configure log4j.properties file to generate log file - Over -->
-   
    <session-config>
 	<session-timeout>15</session-timeout>
 	<cookie-config>

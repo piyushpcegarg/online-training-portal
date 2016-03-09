@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="ERROR">
+	<Properties>
+        <Property name="LOG_DIR">${sys:catalina.base}/logs</Property>
+        <Property name="ARCHIVE">${LOG_DIR}/archive</Property>
+        <Property name="PATTERN">%-5p: %d{dd-MMM-yyyy HH:mm:ss,SSS}: %X{hostinfo} : %c.%M(): %m%n</Property>
+    </Properties>
+	<Appenders>
+		<Console name="stdout" target="SYSTEM_OUT">
+			<PatternLayout pattern="${PATTERN}" />
+		</Console>
+		<RollingFile name="FILE"
+                     fileName="${LOG_DIR}/trainingPortal.log"
+                     filePattern="${ARCHIVE}/trainingPortal.log.%d{dd-MM-yyyy-hh-mm}.gz">
+            <PatternLayout pattern="${PATTERN}"/>
+            <Policies>
+	            <SizeBasedTriggeringPolicy size="1024KB">
+    	        </SizeBasedTriggeringPolicy>
+            </Policies>
+            <DefaultRolloverStrategy max="50"/>
+        </RollingFile>
+	</Appenders>
+	<Loggers>
+        <Root level="ERROR">
+        	<AppenderRef ref="stdout"/>
+        	<AppenderRef ref="FILE"></AppenderRef>
+        </Root>
+        <Logger name="org.hdiv" level="TRACE" additivity="false" >
+        	<AppenderRef ref="stdout"></AppenderRef>
+        </Logger>
+        <Logger name="org.springframework.aop.interceptor.PerformanceMonitorInterceptor" level="TRACE" additivity="true"/>
+        <Logger name="org.springframework.security" level="TRACE" additivity="false">
+        	<AppenderRef ref="stdout"/>
+        </Logger>
+    </Loggers>
+</Configuration>

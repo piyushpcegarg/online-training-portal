@@ -242,7 +242,7 @@ public class PasswordServiceImpl implements PasswordService , MessageSourceAware
     			}
     			else
     			{
-    				String decryptedSecurityAnswer = CommonFunctions.getStandardPBEDecryptedString(null, null, orgUserMst.getSecretAnswer());
+    				String decryptedSecurityAnswer = CommonFunctions.getStandardPBEDecryptedString(orgUserMst.getSecretAnswer());
     				if(!changePasswordDto.getUserSecAnswer().equals(decryptedSecurityAnswer))
         			{
     					errorMessages.append(messages.getMessage("userSecAnswer_wrong","You entered wrong Security Answer.",locale));
@@ -330,7 +330,7 @@ public class PasswordServiceImpl implements PasswordService , MessageSourceAware
     			}
     			else
     			{
-    				String decryptedSecurityAnswer = CommonFunctions.getStandardPBEDecryptedString(null, null, orgUserMst.getSecretAnswer());
+    				String decryptedSecurityAnswer = CommonFunctions.getStandardPBEDecryptedString(orgUserMst.getSecretAnswer());
     				if(!forgotPasswordDto.getUserSecAnswer().equals(decryptedSecurityAnswer))
         			{
     					errorMessages.append(messages.getMessage("userSecAnswer_wrong","You entered wrong Security Answer.",locale));

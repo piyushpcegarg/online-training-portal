@@ -3,6 +3,7 @@
  */
 package com.gargorg.Admin.dao;
 
+import java.util.List;
 
 /**
  * @author piyush
@@ -10,5 +11,5 @@ package com.gargorg.Admin.dao;
  */
 public interface AccessControlDao {
 
-	public String[] getAllowedRoles(String requestUrl) throws Exception;
+	public List<String> getAllowedRoles(String requestUrl) throws Exception;
 }

@@ -15,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -24,6 +25,8 @@ public class CustomDaoAuthenticationProvider extends DaoAuthenticationProvider
 {
 	@Autowired
 	private HttpServletRequest request;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	@Value("${invalidLoginAttempts}") 
 	private long invalidLoginAttempts;
 	
@@ -115,26 +118,19 @@ public class CustomDaoAuthenticationProvider extends DaoAuthenticationProvider
 		
 		final Logger LOGGER = LoggerFactory.getLogger(CustomDaoAuthenticationProvider.class);
 		
-		Object salt = null;
-		
 		LOGGER.debug("CustomDaoAuthenticationProvider:additionalAuthenticationChecks method Called.");
-
-		if (getSaltSource() != null) {
-			salt = getSaltSource().getSalt(userDetails);
-		}
 
 		if (authentication.getCredentials() == null) {
 			LOGGER.debug("Authentication failed: no credentials provided");
 
 			throw new BadCredentialsException(this.messages.getMessage(
 					"AbstractUserDetailsAuthenticationProvider.badCredentials",
-					"Bad credentials",locale), userDetails);
+					"Bad credentials",locale));
 		}
 
 		String presentedPassword = authentication.getCredentials().toString();
 
-		if (!(getPasswordEncoder().isPasswordValid(userDetails.getPassword(),
-				presentedPassword, salt))) {
+		if (!(passwordEncoder.matches(presentedPassword, userDetails.getPassword()))) {
 			LOGGER.debug("Authentication failed: password does not match stored value");
 			
 			CustomUser customUser = (CustomUser)userDetails;
@@ -149,7 +145,7 @@ public class CustomDaoAuthenticationProvider extends DaoAuthenticationProvider
 					+ attemptsRemaining.longValue() +
 					messages.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials3"," attempts are remaining. Please click Forgot Password to retrieve your account details.",locale);
 			
-			throw new BadCredentialsException(badCredentialExceptionMessage , userDetails);
+			throw new BadCredentialsException(badCredentialExceptionMessage);
 		}
 	}
 }

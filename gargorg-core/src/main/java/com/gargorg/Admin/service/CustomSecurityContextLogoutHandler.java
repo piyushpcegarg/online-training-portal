@@ -5,25 +5,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.util.StringUtils;
 
-public class CustomSecurityContextLogoutHandler extends SecurityContextLogoutHandler 
+public class CustomSecurityContextLogoutHandler implements LogoutHandler 
 {
-	public CustomSecurityContextLogoutHandler() {
-		super();
-	}
-
 	@Override
 	public void logout(HttpServletRequest request,
 			HttpServletResponse response, Authentication authentication) {
 		
-		super.logout(request, response, authentication);
 		Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) 
         {
             cookie.setMaxAge(0);
             cookie.setValue(null);
-            cookie.setPath("/");
+            String cookiePath = request.getContextPath();
+            if (!StringUtils.hasLength(cookiePath)) {
+				cookiePath = "/";
+			}
+            cookie.setPath(cookiePath);
             response.addCookie(cookie);
         }
 	}

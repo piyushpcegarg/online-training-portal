@@ -20,7 +20,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.LocaleResolver;
 
 import com.gargorg.Admin.dao.UserDetailsDao;
-import com.gargorg.Admin.valueObject.CustomUser;
 import com.gargorg.Masters.valueObject.OrgUserMst;
 import com.gargorg.common.Utils.CommonFunctions;
 import com.gargorg.common.Utils.CommonUtility;
@@ -65,55 +64,51 @@ public class CustomAuthenticationFailureHandler extends ExceptionMappingAuthenti
 	private void handleAuthenticationException(HttpServletRequest request,HttpServletResponse response, AuthenticationException exception)
 	{
 		if (exception instanceof BadCredentialsException)
-		{
-			CustomUser customUser = (CustomUser)exception.getExtraInformation();
+		{	
+			String username = request.getParameter("username");
 			try
 			{
-				if(customUser != null)
+				if(username != null)
 				{
-					if(customUser.getUsername() != null)
-					{
-						OrgUserMst orgUserMst = userDetailsDAO.findByUsername(customUser.getUsername());
-						if(orgUserMst != null)
-							
+					OrgUserMst orgUserMst = userDetailsDAO.findByUsername(username);
+					if(orgUserMst != null)
+						
+		        	{
+			        	Long invalidLoginCnt = orgUserMst.getInvalidLoginCnt();  
+			        	Date unlockTime = orgUserMst.getUnlockTime();
+			            // update the failed login count -> Start 
+			        	if((invalidLoginCnt < (invalidLoginAttempts - 1L)) && unlockTime == null )
 			        	{
-				        	Long invalidLoginCnt = orgUserMst.getInvalidLoginCnt();  
-				        	Date unlockTime = orgUserMst.getUnlockTime();
-				            // update the failed login count -> Start 
-				        	if((invalidLoginCnt < (invalidLoginAttempts - 1L)) && unlockTime == null )
-				        	{
-				        		orgUserMst.setInvalidLoginCnt(++invalidLoginCnt);
-				        		userDetailsDAO.updateUser(orgUserMst);  
-				        	}
-				        	else if((invalidLoginCnt == (invalidLoginAttempts - 1L)) && unlockTime == null )
-				        	{
-				        		Date currDate = commonUtility.getCurrentDateFromDB();
-				        		unlockTime = CommonFunctions.addMinutesInDate(currDate , accountUnlockTime.intValue());
-				        		orgUserMst.setInvalidLoginCnt(++invalidLoginCnt);
-				        		orgUserMst.setUnlockTime(unlockTime);
-				        		userDetailsDAO.updateUser(orgUserMst);
-				        	}
-				        	else if((invalidLoginCnt == invalidLoginAttempts) && unlockTime != null )
-				        	{
-				        		Date currDate = commonUtility.getCurrentDateFromDB();
-				        		unlockTime = CommonFunctions.addMinutesInDate(currDate , accountUnlockTime.intValue());
-				        		orgUserMst.setUnlockTime(unlockTime);
-				        		userDetailsDAO.updateUser(orgUserMst);
-				        	}
-				        	else
-				        	{
-				        		// Do Nothing
-				        	}
-				        	// update the failed login count -> End
+			        		orgUserMst.setInvalidLoginCnt(++invalidLoginCnt);
+			        		userDetailsDAO.updateUser(orgUserMst);  
 			        	}
-					}
+			        	else if((invalidLoginCnt == (invalidLoginAttempts - 1L)) && unlockTime == null )
+			        	{
+			        		Date currDate = commonUtility.getCurrentDateFromDB();
+			        		unlockTime = CommonFunctions.addMinutesInDate(currDate , accountUnlockTime.intValue());
+			        		orgUserMst.setInvalidLoginCnt(++invalidLoginCnt);
+			        		orgUserMst.setUnlockTime(unlockTime);
+			        		userDetailsDAO.updateUser(orgUserMst);
+			        	}
+			        	else if((invalidLoginCnt == invalidLoginAttempts) && unlockTime != null )
+			        	{
+			        		Date currDate = commonUtility.getCurrentDateFromDB();
+			        		unlockTime = CommonFunctions.addMinutesInDate(currDate , accountUnlockTime.intValue());
+			        		orgUserMst.setUnlockTime(unlockTime);
+			        		userDetailsDAO.updateUser(orgUserMst);
+			        	}
+			        	else
+			        	{
+			        		// Do Nothing
+			        	}
+			        	// update the failed login count -> End
+		        	}
 				}
 			}
 			catch(Exception e)
 			{
 				LOGGER.error("Error description", e);
 			}
-			exception.clearExtraInformation();
 		}
 	}
 	

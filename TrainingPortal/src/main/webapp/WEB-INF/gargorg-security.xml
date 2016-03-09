@@ -10,7 +10,7 @@
 		   
 	<!-- Filter Chain -->
 	<bean id="springSecurityFilterChain" class="org.springframework.security.web.FilterChainProxy">
-	 	<sec:filter-chain-map path-type="ant">
+	 	<sec:filter-chain-map request-matcher="ant">
 			<sec:filter-chain pattern="/resources/**" filters="anonymousProcessingFilter" />
 			<sec:filter-chain pattern="/login*/**" filters="anonymousProcessingFilter" />
 			<sec:filter-chain pattern="/changePassword/**" filters="anonymousProcessingFilter" />
@@ -44,8 +44,8 @@
 	<bean id="channelProcessingFilter" class="org.springframework.security.web.access.channel.ChannelProcessingFilter">
   		<property name="channelDecisionManager" ref="channelDecisionManager"/>
   		<property name="securityMetadataSource">
-    		<sec:filter-security-metadata-source path-type="ant">
-      			<sec:intercept-url pattern="/**" access="REQUIRES_SECURE_CHANNEL" />
+    		<sec:filter-security-metadata-source request-matcher="ant">
+      			<sec:intercept-url pattern="/**" access="REQUIRES_INSECURE_CHANNEL" />
     		</sec:filter-security-metadata-source>
   		</property>
 	</bean>
@@ -68,6 +68,7 @@
 	<bean id="portMapper" class="org.springframework.security.web.PortMapperImpl">
 		<property name="portMappings">
 			<map>
+				<!-- below properties are defined in SpringSecurity.properties file -->
 				<entry key="${httpPort1}"><value>${httpsPort1}</value></entry>
 				<entry key="${httpPort2}"><value>${httpsPort2}</value></entry>
 			</map>
@@ -88,14 +89,14 @@
 	<!-- Concurrent Session Handling Start-->
 	<bean id="concurrentSessionFilter" class="org.springframework.security.web.session.ConcurrentSessionFilter">
 		<constructor-arg ref="sessionRegistry"></constructor-arg>
-		<constructor-arg value="/${ExpiredUrl}"></constructor-arg>
+		<constructor-arg value="${ExpiredUrl}"></constructor-arg>
 	</bean>
 	<!-- Concurrent Session Handling End-->
  	
 
 	<bean id="logoutFilter" class="org.springframework.security.web.authentication.logout.LogoutFilter">
-		<property name="filterProcessesUrl" value="/${logoutPageUrl}" />
-  		<constructor-arg value="/${logoutSuccessUrl}"/>
+		<property name="filterProcessesUrl" value="${logoutPageUrl}" />
+  		<constructor-arg value="${logoutSuccessUrl}"/>
   		<constructor-arg> 
   			<list>
        			<bean class="com.gargorg.Admin.service.CustomSecurityContextLogoutHandler"/>
@@ -106,7 +107,7 @@
 	<bean id="authenticationProcessingFilter"  class="org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter">
 		<property name="sessionAuthenticationStrategy" ref="sessionAuthenticationStrategy" />
   		<property name="authenticationManager" ref="authenticationManager"/>
-  		<property name="filterProcessesUrl" value="/${authenticationCheck}"/>
+  		<property name="filterProcessesUrl" value="${authenticationCheck}"/>
   		<property name="usernameParameter" value="username"/>
         <property name="passwordParameter" value="password"/>
   		<property name="authenticationSuccessHandler" ref="authenticationSuccessHandler" />
@@ -115,21 +116,21 @@
  	
  	<bean id="authenticationSuccessHandler" class="com.gargorg.Admin.service.CustomAuthenticationSuccessHandler">
   		<property name="alwaysUseDefaultTargetUrl" value="true"/>
-  		<property name="defaultTargetUrl" value="/${homePageUrl}"/>
+  		<property name="defaultTargetUrl" value="${homePageUrl}"/>
   		<property name="localeResolver" ref="localeResolver" />
 	</bean>
 	
 	<bean id="authenticationFailureHandler" class=" com.gargorg.Admin.service.CustomAuthenticationFailureHandler">
-   		<property name="defaultFailureUrl" value="/${loginfailedPageUrl}/"/>
+   		<property name="defaultFailureUrl" value="${loginfailedPageUrl}/"/>
    		<property name="exceptionMappings">
 	        <props>
-	            <prop key="org.springframework.security.authentication.LockedException">/${loginfailedPageUrl}/accountLocked</prop>
-	            <prop key="org.springframework.security.authentication.DisabledException">/${loginfailedPageUrl}/accountDisabled</prop>
-	            <prop key="org.springframework.security.authentication.AccountExpiredException">/${loginfailedPageUrl}/accountExpired</prop>
-	            <prop key="org.springframework.security.authentication.BadCredentialsException">/${loginfailedPageUrl}/badCredentials</prop>
-	            <prop key="org.springframework.security.authentication.CredentialsExpiredException">/${changePasswordPageUrl}/credentialExpired</prop>
-	            <prop key="com.gargorg.Admin.Exception.OtpRequiredException">/${loginfailedPageUrl}/otpRequired</prop>
-	            <prop key="com.gargorg.Admin.Exception.InvalidOtpException">/${loginfailedPageUrl}/invalidOtpException</prop>
+	            <prop key="org.springframework.security.authentication.LockedException">${loginfailedPageUrl}/accountLocked</prop>
+	            <prop key="org.springframework.security.authentication.DisabledException">${loginfailedPageUrl}/accountDisabled</prop>
+	            <prop key="org.springframework.security.authentication.AccountExpiredException">${loginfailedPageUrl}/accountExpired</prop>
+	            <prop key="org.springframework.security.authentication.BadCredentialsException">${loginfailedPageUrl}/badCredentials</prop>
+	            <prop key="org.springframework.security.authentication.CredentialsExpiredException">${changePasswordPageUrl}/credentialExpired</prop>
+	            <prop key="com.gargorg.Admin.Exception.OtpRequiredException">${loginfailedPageUrl}/otpRequired</prop>
+	            <prop key="com.gargorg.Admin.Exception.InvalidOtpException">${loginfailedPageUrl}/invalidOtpException</prop>
 	        </props>
     	</property>
     	<property name="localeResolver" ref="localeResolver" />
@@ -166,7 +167,7 @@
    	</bean>
    	<bean id ="requestCache" class="org.springframework.security.web.savedrequest.HttpSessionRequestCache"></bean>
    	<bean id="accessDeniedHandler" class="org.springframework.security.web.access.AccessDeniedHandlerImpl">
-		<property name="errorPage" value="/${accessDenied}" />
+		<property name="errorPage" value="${accessDenied}" />
 	</bean>
 	
 	<bean id="filterSecurityInterceptor"  class="org.springframework.security.web.access.intercept.FilterSecurityInterceptor">
@@ -187,8 +188,8 @@
    	<bean id="jdbcFilterInvocationSecurityMetadataSource" class="com.gargorg.Admin.service.JdbcFilterInvocationSecurityMetadataSource"/>
 
  	 <bean id="loginEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
-           <property name="loginFormUrl" value="/${loginPageUrl}"/>
-           <property name="forceHttps" value="true"/>
+           <property name="loginFormUrl" value="${loginPageUrl}"/>
+           <property name="forceHttps" value="false"/>
      </bean>
  	
  	<bean id="authenticationManager" class="org.springframework.security.authentication.ProviderManager">
