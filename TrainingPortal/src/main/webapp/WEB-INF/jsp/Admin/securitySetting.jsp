@@ -2,7 +2,7 @@
 
 <spring:url var="formAction" value="/securitySetting/update" ></spring:url>
 
-	<form:form name='securitySettingForm' id='securitySettingForm' method="post" action="${formAction}">
+	<form:form name='securitySettingForm' id='securitySettingForm' method="post" action="${formAction}" commandName="cmnLookupMstDto" >
      <fieldset>
   		<legend><b><spring:message code="securitySetting" /><spring:message code="form" /></b></legend>
   		
@@ -32,7 +32,7 @@
 
 	<div class="form_settings">
 		<p style="padding-top: 15px"><span>&nbsp;</span>
-		<form:button class="submit" id="updateSetting" name="updateSetting" ><spring:message code="updateSetting" /></form:button>
+		<input class="submit" type="button" id="updateSetting" name="updateSetting" value="<spring:message code="updateSetting" />" />
 		<input class="submit" type="button" name="close" value="<spring:message code="close" />" onclick="goToHomePage()" /></p>
 	</div>
 	</fieldset>

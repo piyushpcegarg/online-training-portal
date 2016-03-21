@@ -65,7 +65,7 @@ public class SettingServiceImpl implements SettingService
 	    		LoginDetailsVO loginDetailsVO = loginDetailsVOProviderService.getLoginDetailsVO();	//Get LoginDetailsVO from Security Context holder
 	    		
 	    		Date currDate = commonUtility.getCurrentDateFromDB();
-	    		orgUserMst.setPassword(CommonFunctions.getEncodedPassword(defaultPassword));
+	    		orgUserMst.setPassword(commonUtility.getEncodedPassword(defaultPassword));
 	    		orgUserMst.setPwdchangedDate(CommonFunctions.addDaysInDate(currDate, passwordExpireDays));
 	    		orgUserMst.setOrgUserMstByUpdatedUserId(loginDetailsVO.getUser());
 	    		orgUserMst.setUpdatedDate(currDate);

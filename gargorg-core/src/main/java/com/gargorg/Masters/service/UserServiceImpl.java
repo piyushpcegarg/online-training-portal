@@ -125,14 +125,14 @@ public class UserServiceImpl implements UserService
 			
 			OrgUserMst user = new OrgUserMst();
 			user.setUserName(userDto.getUserName());
-			user.setPassword(CommonFunctions.getEncodedPassword(defaultPassword));
+			user.setPassword(commonUtility.getEncodedPassword(defaultPassword));
 			user.setActivateFlag(activateFlag);
 			user.setOrgUserMstByCreatedUserId(createdUser);
 			user.setCreatedDate(currDate);
 			user.setFirstlogin("Y");
 			user.setPwdchangedDate(CommonFunctions.addDaysInDate(currDate, 30));
 			user.setSecretQueCode(userDto.getSecretQueCode());
-			user.setSecretAnswer(CommonFunctions.getStandardPBEEncryptedString(userDto.getSecretAnswer()));
+			user.setSecretAnswer(commonUtility.getStandardPBEEncryptedString(userDto.getSecretAnswer()));
 			user.setInvalidLoginCnt(0);
 			user.setOtpEnabled(userDto.isOtpEnabled());
 			user.setRegMobileNo(userDto.getRegMobileNo());
@@ -216,7 +216,7 @@ public class UserServiceImpl implements UserService
 			userDto.setUserId(userId);
 			userDto.setUserName(user.getUserName());
 			userDto.setSecretQueCode(user.getSecretQueCode());
-			userDto.setSecretAnswer(CommonFunctions.getStandardPBEDecryptedString(user.getSecretAnswer()));
+			userDto.setSecretAnswer(commonUtility.getStandardPBEDecryptedString(user.getSecretAnswer()));
 			userDto.setRegMobileNo(user.getRegMobileNo());
 			userDto.setActivateFlag(user.isActivateFlag());
 			userDto.setOtpEnabled(user.isOtpEnabled());
@@ -309,7 +309,7 @@ public class UserServiceImpl implements UserService
 			OrgUserMst user = new OrgUserMst();
 			user.setActivateFlag(activateFlag);
 			user.setSecretQueCode(userDto.getSecretQueCode());
-			user.setSecretAnswer(CommonFunctions.getStandardPBEEncryptedString(userDto.getSecretAnswer()));
+			user.setSecretAnswer(commonUtility.getStandardPBEEncryptedString(userDto.getSecretAnswer()));
 			user.setOtpEnabled(userDto.isOtpEnabled());
 			user.setRegMobileNo(userDto.getRegMobileNo());
 			user.setOrgUserMstByUpdatedUserId(updateUser);
@@ -362,7 +362,7 @@ public class UserServiceImpl implements UserService
 			//Compare user , lstEmployees , userImage and userPersistent , lstEmployeesPersistent , userImagePersistent  whether user changed something or not - > Start
 			// Compare User -> Start
 			if(	(user.getSecretQueCode() != userPersistent.getSecretQueCode()) || 						// Security Question code
-					!CommonFunctions.getStandardPBEDecryptedString(user.getSecretAnswer()).equals(CommonFunctions.getStandardPBEDecryptedString(userPersistent.getSecretAnswer())) ||	// Security Answer
+					!commonUtility.getStandardPBEDecryptedString(user.getSecretAnswer()).equals(commonUtility.getStandardPBEDecryptedString(userPersistent.getSecretAnswer())) ||	// Security Answer
 						user.isOtpEnabled() != userPersistent.isOtpEnabled()	||							// OTP Enabled
 							user.getRegMobileNo() != userPersistent.getRegMobileNo()	||				// Registered Mobile No
 								user.isActivateFlag() != userPersistent.isActivateFlag()	||				// Activate flag

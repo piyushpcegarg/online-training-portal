@@ -84,7 +84,7 @@ public class ApplicationSecurityConfiguration extends WebSecurityConfigurerAdapt
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring()
 				// ignore all URLs that start with /resources/
-				.antMatchers("/resources/**");
+				.antMatchers("/resources/**",logoutSuccessUrl);
 	}
 	
 	@Override

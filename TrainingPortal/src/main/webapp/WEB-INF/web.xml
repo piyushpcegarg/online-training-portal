@@ -7,13 +7,17 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
   <display-name>gargorg</display-name>
+  <welcome-file-list>
+    <welcome-file>login</welcome-file>
+  </welcome-file-list>
   <!-- replace JSTL tld with hdiv tld - start -->
-	<jsp-config>
+  <!-- Comment out below block if isHdivEnabled=false in System property -->
+	<!-- <jsp-config>
 	    <taglib>
 	        <taglib-uri>http://java.sun.com/jsp/jstl/core</taglib-uri>
 	        <taglib-location>/WEB-INF/tlds/hdiv-c.tld</taglib-location>
 	    </taglib>
-	</jsp-config>
+	</jsp-config> -->
   <!-- replace JSTL tld with hdiv tld - end -->
   <!-- Common error page for all type of errors - start -->
   <error-page>
@@ -25,9 +29,10 @@
 	<session-timeout>15</session-timeout>
 	<cookie-config>
 		<http-only>true</http-only>
-		<secure>true</secure>
+		<!-- Change secure=false if isHttpsEnabled=false in System property -->
+		<secure>false</secure>
 	</cookie-config>
 	<tracking-mode>COOKIE</tracking-mode>
-</session-config>
+	</session-config>
   
 </web-app>

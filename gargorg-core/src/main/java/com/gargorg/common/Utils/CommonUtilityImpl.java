@@ -8,10 +8,12 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.jasypt.encryption.StringEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +26,10 @@ public class CommonUtilityImpl implements CommonUtility
 	
 	@Autowired
 	private SessionFactory sessionFactory;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	@Autowired
+	private StringEncryptor stringEncryptor;
 	
 	private final Logger LOGGER = LoggerFactory.getLogger(CommonUtilityImpl.class);
 
@@ -76,5 +82,26 @@ public class CommonUtilityImpl implements CommonUtility
 			throw e;
 		}
 		return cmnLanguageMst;
+	}
+	
+	@Override
+	public String getStandardPBEEncryptedString(String clearTextString) {
+		return stringEncryptor.encrypt(clearTextString);
+	}
+    
+	@Override
+    public String getStandardPBEDecryptedString(String encryptedString) {
+		return stringEncryptor.decrypt(encryptedString);
+	}
+    
+	@Override
+    public String getEncodedPassword(String password) {
+		String hashedPassword = passwordEncoder.encode(password);
+		return hashedPassword;
+	}
+    
+	@Override
+    public boolean compareEncodedPassword(String rawPassword ,  String encodedPassword) {
+    	return passwordEncoder.matches(rawPassword, encodedPassword);
 	}
 }

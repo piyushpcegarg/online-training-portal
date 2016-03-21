@@ -19,7 +19,11 @@ import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatche
 import net.sf.ehcache.constructs.web.filter.GzipFilter;
 
 public class CustomWebApplicationInitializer extends AbstractAnnotationConfigDispatcherServletInitializer implements WebApplicationInitializer {
-	 
+	
+	/**
+	 * Define isHdivEnabled and isHttpsEnabled in VM arguments of server for 
+	 * enabling/disabling of HDIV and HTTPS
+	 */
 	static boolean isHdivEnabled = true;
 	static boolean isHttpsEnabled = true;
 	
@@ -33,12 +37,19 @@ public class CustomWebApplicationInitializer extends AbstractAnnotationConfigDis
 	// Create the 'root' Spring application context
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-		return new Class[] {
-				ApplicationMainConfiguration.class,
-				ApplicationSecurityConfiguration.class , 
-				// This configutaion class handles all OWASP HDIV security configuration
-				ApplicationHdivSecurityConfiguration.class 
-		};
+		if(isHdivEnabled) {
+			return new Class[] {
+					ApplicationMainConfiguration.class,
+					ApplicationSecurityConfiguration.class,
+					// This configutaion class handles all OWASP HDIV security configuration
+					ApplicationHdivSecurityConfiguration.class
+			};
+		} else {
+			return new Class[] {
+					ApplicationMainConfiguration.class,
+					ApplicationSecurityConfiguration.class,
+			};
+		}
 	}
 	
 	// Create the dispatcher servlet's Spring application context
@@ -67,7 +78,9 @@ public class CustomWebApplicationInitializer extends AbstractAnnotationConfigDis
 	
 	private void addListenerToContext(ServletContext servletContext) {
 		/* Following listener added for HDIV configuration to implement and protect application from OWASP top 10 security vulnerabilities - start  */
-		addInitListener(servletContext);
+		if(isHdivEnabled) {
+			addInitListener(servletContext);
+		}
 		/* Following listener added for HDIV configuration to implement and protect application from OWASP top 10 security vulnerabilities - end  */
 		addHttpSessionEventPublisher(servletContext);
 		addRequestContextListener(servletContext);
@@ -75,7 +88,9 @@ public class CustomWebApplicationInitializer extends AbstractAnnotationConfigDis
 	
 	private void addFiltersToContext(ServletContext servletContext) {
 		// HDIV Validator Filter - HDIV filter configuration without Spring Security filter chain - start
-		addHdivValidatorFilter(servletContext);
+		if(isHdivEnabled) {
+			addHdivValidatorFilter(servletContext);
+		}
 		// HDIV Validator Filter - HDIV filter configuration without Spring Security filter chain - end
 		//addCompressionFilter(servletContext);
 		addEncodingFiler(servletContext);

@@ -6,12 +6,8 @@ package com.gargorg.common.Utils;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.jasypt.encryption.StringEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import com.gargorg.common.constant.CommonConstants;
@@ -20,15 +16,9 @@ import com.gargorg.common.constant.CommonConstants;
  * @author piyush
  *	This class contains all the functions which are used through out the project. 
  */
-@Component("commonFunctions")
 public class CommonFunctions 
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(CommonFunctions.class);
-	
-	@Autowired
-	private static PasswordEncoder passwordEncoder;
-	@Autowired
-	private static StringEncryptor stringEncryptor;
 	
 	public static Date addMinutesInDate(Date date , int minutes)
 	{
@@ -77,23 +67,6 @@ public class CommonFunctions
 	  return daysBetween;  
 	}
 	
-	public static String getStandardPBEEncryptedString(String clearTextString) {
-		return stringEncryptor.encrypt(clearTextString);
-	}
-    
-    public static String getStandardPBEDecryptedString(String encryptedString) {
-		return stringEncryptor.decrypt(encryptedString);
-	}
-    
-    public static String getEncodedPassword(String password) {
-		String hashedPassword = passwordEncoder.encode(password);
-		return hashedPassword;
-	}
-    
-    public static boolean compareEncodedPassword(String rawPassword ,  String encodedPassword) {
-    	return passwordEncoder.matches(rawPassword, encodedPassword);
-	}
-    
     public static String determineTrainingStatus(Date trainingStartTime , Date trainingEndTime , Date trainingDate , Date currDate)	{
     	String trainingStatus = null;
     	Date trainingStartDate = mergeDateTime(trainingDate, trainingStartTime);

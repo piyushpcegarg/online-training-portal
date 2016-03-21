@@ -135,6 +135,7 @@ public class SettingController
 		try
 		{
 			model.addAttribute("lstSecuritySettings", settingService.getSecuritySettings());
+			model.addAttribute("cmnLookupMstDto", new CmnLookupMstDto());
 		}
 		catch(Exception e)
 		{

@@ -45,7 +45,7 @@
             	<a href="${contextPath}/forgotPassword"><spring:message code="forgot_password"/></a>
             </p>  
             <p style="padding-top: 15px"><span>&nbsp;</span>
-            <input class="submit" type="button" name="login" id="login" value="<spring:message code="login" />" />
+            <input class="submit" type="submit" name="login" id="login" value="<spring:message code="login" />" />
             <input class="submit" type="reset" name="reset" id="reset" value="<spring:message code="reset" />" /></p>
      </fieldset>
      </form>

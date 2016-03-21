@@ -212,7 +212,7 @@ public class PasswordServiceImpl implements PasswordService , MessageSourceAware
     		// Validate form data with the data retrieved from database -> Start
     		if(changePasswordDto.getOldPassword() != null)
     		{
-    			if(!CommonFunctions.compareEncodedPassword(changePasswordDto.getOldPassword() , orgUserMst.getPassword()))
+    			if(!commonUtility.compareEncodedPassword(changePasswordDto.getOldPassword() , orgUserMst.getPassword()))
     			{
     				errorMessages.append(messages.getMessage("oldPassword_wrong","You entered wrong old password.",locale));
     			}
@@ -242,7 +242,7 @@ public class PasswordServiceImpl implements PasswordService , MessageSourceAware
     			}
     			else
     			{
-    				String decryptedSecurityAnswer = CommonFunctions.getStandardPBEDecryptedString(orgUserMst.getSecretAnswer());
+    				String decryptedSecurityAnswer = commonUtility.getStandardPBEDecryptedString(orgUserMst.getSecretAnswer());
     				if(!changePasswordDto.getUserSecAnswer().equals(decryptedSecurityAnswer))
         			{
     					errorMessages.append(messages.getMessage("userSecAnswer_wrong","You entered wrong Security Answer.",locale));
@@ -264,7 +264,7 @@ public class PasswordServiceImpl implements PasswordService , MessageSourceAware
     		// If form data has no problem then update the password in encrypted form -> Start
     		if(errorMessages.length() == 0)
     		{
-    			orgUserMst.setPassword(CommonFunctions.getEncodedPassword(changePasswordDto.getNewPassword()));
+    			orgUserMst.setPassword(commonUtility.getEncodedPassword(changePasswordDto.getNewPassword()));
     			orgUserMst.setPwdchangedDate(CommonFunctions.addDaysInDate(currDate, passwordExpireDays));
     			orgUserMst.setOrgUserMstByUpdatedUserId(orgUserMst);
     			orgUserMst.setUpdatedDate(currDate);
@@ -330,7 +330,7 @@ public class PasswordServiceImpl implements PasswordService , MessageSourceAware
     			}
     			else
     			{
-    				String decryptedSecurityAnswer = CommonFunctions.getStandardPBEDecryptedString(orgUserMst.getSecretAnswer());
+    				String decryptedSecurityAnswer = commonUtility.getStandardPBEDecryptedString(orgUserMst.getSecretAnswer());
     				if(!forgotPasswordDto.getUserSecAnswer().equals(decryptedSecurityAnswer))
         			{
     					errorMessages.append(messages.getMessage("userSecAnswer_wrong","You entered wrong Security Answer.",locale));
@@ -352,7 +352,7 @@ public class PasswordServiceImpl implements PasswordService , MessageSourceAware
     		// If form data has no problem then update the password in encrypted form -> Start
     		if(errorMessages.length() == 0)
     		{
-    			orgUserMst.setPassword(CommonFunctions.getEncodedPassword(forgotPasswordDto.getNewPassword()));
+    			orgUserMst.setPassword(commonUtility.getEncodedPassword(forgotPasswordDto.getNewPassword()));
     			orgUserMst.setPwdchangedDate(CommonFunctions.addDaysInDate(currDate, passwordExpireDays));
     			orgUserMst.setOrgUserMstByUpdatedUserId(orgUserMst);
     			orgUserMst.setUpdatedDate(currDate);

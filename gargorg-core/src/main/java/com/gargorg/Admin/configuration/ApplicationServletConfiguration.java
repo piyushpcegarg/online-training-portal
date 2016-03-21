@@ -141,7 +141,7 @@ public class ApplicationServletConfiguration extends WebMvcConfigurerAdapter imp
          */
     	
     	if(CustomWebApplicationInitializer.isHdivEnabled) {
-    		return new EditableParameterValidator ();
+    		return new EditableParameterValidator();
     	} else {
     		
     		/**
