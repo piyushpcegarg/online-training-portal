@@ -21,7 +21,6 @@ import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -48,7 +47,6 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
-@Import(ApplicationMainConfiguration.class)
 public class ApplicationServletConfiguration extends WebMvcConfigurerAdapter implements ServletContextAware {
 
 	private @Value("${hibernate.dataSourceClassName}") String dataSourceClassName;

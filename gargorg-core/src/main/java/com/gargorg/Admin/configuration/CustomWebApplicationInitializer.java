@@ -41,6 +41,8 @@ public class CustomWebApplicationInitializer extends AbstractAnnotationConfigDis
 			return new Class[] {
 					ApplicationMainConfiguration.class,
 					ApplicationSecurityConfiguration.class,
+					// This configuration class handles all the spring MVC configuration
+					ApplicationServletConfiguration.class,
 					// This configutaion class handles all OWASP HDIV security configuration
 					ApplicationHdivSecurityConfiguration.class
 			};
@@ -48,15 +50,17 @@ public class CustomWebApplicationInitializer extends AbstractAnnotationConfigDis
 			return new Class[] {
 					ApplicationMainConfiguration.class,
 					ApplicationSecurityConfiguration.class,
+					// This configuration class handles all the spring MVC configuration
+					ApplicationServletConfiguration.class
 			};
 		}
 	}
 	
 	// Create the dispatcher servlet's Spring application context
+	// There is no servlet specific configuration, so no class added in this method
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
-		// This configuration class handles all the spring MVC configuration
-		return new Class[] { ApplicationServletConfiguration.class };
+		return null;
 	}
 	
 	@Override
