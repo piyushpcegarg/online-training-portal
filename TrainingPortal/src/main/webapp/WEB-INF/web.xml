@@ -12,12 +12,12 @@
   </welcome-file-list>
   <!-- replace JSTL tld with hdiv tld - start -->
   <!-- Comment out below block if isHdivEnabled=false in System property -->
-	<!-- <jsp-config>
+	<jsp-config>
 	    <taglib>
 	        <taglib-uri>http://java.sun.com/jsp/jstl/core</taglib-uri>
 	        <taglib-location>/WEB-INF/tlds/hdiv-c.tld</taglib-location>
 	    </taglib>
-	</jsp-config> -->
+	</jsp-config>
   <!-- replace JSTL tld with hdiv tld - end -->
   <!-- Common error page for all type of errors - start -->
   <error-page>
@@ -30,7 +30,7 @@
 	<cookie-config>
 		<http-only>true</http-only>
 		<!-- Change secure=false if isHttpsEnabled=false in System property -->
-		<secure>false</secure>
+		<secure>true</secure>
 	</cookie-config>
 	<tracking-mode>COOKIE</tracking-mode>
 	</session-config>
